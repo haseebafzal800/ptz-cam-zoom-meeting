@@ -13,14 +13,17 @@ use Illuminate\Support\Arr;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the rpermissionsesource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
         $data = User::orderBy('id','DESC')->paginate(5);
-        return view('admin.users.index',compact('data'))
+        $userListActive = 'active';
+        $userOpening = 'menu-is-opening';
+        $userOpend = 'menu-open';
+        return view('admin.users.index',compact('data', 'userListActive', 'userOpening', 'userOpend'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     
@@ -32,7 +35,10 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::pluck('name','name')->all();
-        return view('admin.users.create',compact('roles'));
+        $userCreateActive = 'active';
+        $userOpening = 'menu-is-opening';
+        $userOpend = 'menu-open';
+        return view('admin.users.create',compact('roles', 'userCreateActive', 'userOpening', 'userOpend'));
     }
     
     /**
@@ -56,8 +62,7 @@ class UserController extends Controller
         $user = User::create($input);
         $user->assignRole($request->input('roles'));
     
-        return redirect()->route('users.index')
-                        ->with('success','User created successfully');
+        return redirect()->route('users.index')->with('success','User created successfully');
     }
     
     /**
@@ -83,8 +88,11 @@ class UserController extends Controller
         $user = User::find($id);
         $roles = Role::pluck('name','name')->all();
         $userRole = $user->roles->pluck('name','name')->all();
+        $userListActive = 'active';
+        $userOpening = 'menu-is-opening';
+        $userOpend = 'menu-open';
     
-        return view('admin.users.edit',compact('user','roles','userRole'));
+        return view('admin.users.edit',compact('user','roles','userRole', 'userListActive', 'userOpening', 'userOpend'));
     }
     
     /**

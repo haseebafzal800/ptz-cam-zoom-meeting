@@ -32,7 +32,11 @@ class RoleController extends Controller
     public function index(Request $request)
     {
         $roles = Role::orderBy('id','DESC')->paginate(5);
-        return view('admin.roles.index',compact('roles'))
+
+        $roleListActive = 'active';
+        $roleOpening = 'menu-is-opening';
+        $roleOpend = 'menu-open';
+        return view('admin.roles.index',compact('roles', 'roleListActive', 'roleOpening', 'roleOpend'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     
@@ -44,7 +48,10 @@ class RoleController extends Controller
     public function create()
     {
         $permission = Permission::get();
-        return view('admin.roles.create',compact('permission'));
+        $roleCreateActive = 'active';
+        $roleOpening = 'menu-is-opening';
+        $roleOpend = 'menu-open';
+        return view('admin.roles.create',compact('permission', 'roleCreateActive', 'roleOpening', 'roleOpend'));
     }
     
     /**
@@ -78,8 +85,9 @@ class RoleController extends Controller
         $rolePermissions = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
             ->where("role_has_permissions.role_id",$id)
             ->get();
+        $roleActive = 'active';
     
-        return view('admin.roles.show',compact('role','rolePermissions'));
+        return view('admin.roles.show',compact('role','rolePermissions', 'roleActive'));
     }
     
     /**
@@ -95,8 +103,11 @@ class RoleController extends Controller
         $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
             ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
             ->all();
+        $roleListActive = 'active';
+        $roleOpening = 'menu-is-opening';
+        $roleOpend = 'menu-open';
     
-        return view('admin.roles.edit',compact('role','permission','rolePermissions'));
+        return view('admin.roles.edit',compact('role','permission','rolePermissions', 'roleListActive', 'roleOpening', 'roleOpend'));
     }
     
     /**

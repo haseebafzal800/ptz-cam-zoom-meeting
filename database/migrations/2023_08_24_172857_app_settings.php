@@ -15,9 +15,14 @@ class AppSettings extends Migration
     {
         Schema::create('appSettings', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
             $table->string('email');
             $table->text('phone');
             $table->text('address');
+            $table->text('zoomClientId');
+            $table->text('zoomClientSecret');
+            $table->text('zoomToken');
+            $table->text('zoomRedirectUrl');
             $table->timestamps();
         });
     }

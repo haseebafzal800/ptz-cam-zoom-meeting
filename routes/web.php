@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\AppsettingsConteroller;
 use App\Http\Controllers\MeetingController;
+use App\Http\Controllers\CameraController;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\ZoomController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +24,10 @@ Route::get('/', function () {
     // return view('login');
     return redirect()->route('login');
 });
+Route::any('/zoom', [ZoomController::class, 'index'])->name('zoom');
+Route::any('/zoom-token', [ZoomController::class, 'zoom_token'])->name('zoom-token');
+Route::any('/zoom-create-user', [ZoomController::class, 'createUser'])->name('zoom-create-user');
+Route::any('/zoom-create-meeting', [ZoomController::class, 'createMeeting'])->name('zoom-create-meeting');
 
 
 Auth::routes();
@@ -34,6 +40,10 @@ Route::post('/app-settings/update', [AppsettingsConteroller::class, 'update'])->
 // full calander
 Route::get('meetings', [MeetingController::class, 'index']);
 Route::post('fullcalenderAjax', [MeetingController::class, 'ajax']);
+
+//Camera settings
+Route::get('camera-settings', [CameraController::class, 'index']);
+
 
 // roles n permissions
 Route::group(['middleware' => ['auth']], function() {

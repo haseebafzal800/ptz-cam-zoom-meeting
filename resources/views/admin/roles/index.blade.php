@@ -25,7 +25,7 @@
         @endif
 
 
-        <table class="table table-bordered">
+        <table id="example1" class="table table-bordered table-striped">
         <tr>
             <th>No</th>
             <th>Name</th>
@@ -60,5 +60,4 @@
 
   @include('includes.admin.footer')
   @include('includes.admin.scripts')
-  @include('includes.admin.validationScript')
   @stop

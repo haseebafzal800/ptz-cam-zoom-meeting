@@ -62,11 +62,11 @@ var calendar = $('#calendar').fullCalendar({
 
                     selectHelper: true,
                     select: function (start, end, allDay) {
-                        if(start.isBefore(moment())) {
+                        /*if(start.isBefore(moment())) {
                             $('#calendar').fullCalendar('unselect');
                             displayError('Operation not allowed in previous dates', 'Error !');
                             return false;
-                        }
+                        }*/
                         var title = prompt('Event Title:');
                         if (title) {
                             var start = $.fullCalendar.formatDate(start, "YYYY-MM-DD HH:mm:ss");

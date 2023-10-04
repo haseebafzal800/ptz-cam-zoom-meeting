@@ -21,6 +21,15 @@
                     <input type="hidden" name="id" value="{{ $item->id }}">
                     <div class="col-sm-6">
                       <div class="form-group">
+                        <label for="title">System Title</label>
+                        <input type="title" name="title"  value="{{ $item->title }}" class="form-control" id="title" placeholder="System title">
+                        @error('email')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" name="email"  value="{{ $item->email }}" class="form-control" id="email" placeholder="System EMail">
                         @error('email')
@@ -37,7 +46,15 @@
                         @enderror
                       </div>
                     </div>
-                    
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="address" name="address"  value="{{ $item->address }}" class="form-control" id="address" placeholder="System address">
+                        @error('address')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                      </div>
+                    </div>
                     <div class="col-sm-6">
                       <div class="form-group">
                         <label for="logo">Logo</label>
@@ -47,19 +64,11 @@
                         @enderror
                       </div>
                     </div>
+                   
                     <div class="col-sm-6">
                       <div class="form-group">
                         <label for="logo" class="invisible">Logo</label><br>
                         <img src="{{ $item->getFirstMediaUrl('logo', 'thumb') }}" class="img img-fluid">
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                      <div class="form-group">
-                        <label for="address">Address</label>
-                        <input type="address" name="address"  value="{{ $item->address }}" class="form-control" id="address" placeholder="System address">
-                        @error('address')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
                       </div>
                     </div>
                     <div class="col-sm-6">
