@@ -41,6 +41,12 @@
               <p>Dashboard</p>
             </a>
           </li>
+          <li class="nav-item {{$dashboardOpening ?? ''}}  {{$dashboardOpend ?? ''}}">
+            <a href="{{@url('/chatify')}}" class="nav-link {{$dashboardActive??''}}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Chat</p>
+            </a>
+          </li>
           @if (Gate::check('role-list') || Gate::check('role-create'))
           <li class="nav-item {{$roleOpening??''}} {{$roleOpend??''}}">
             <a href="#" class="nav-link ">
