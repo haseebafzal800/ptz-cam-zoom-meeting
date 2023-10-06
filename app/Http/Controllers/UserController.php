@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
     
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\AppSettingsModel;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use DB;
@@ -55,9 +56,10 @@ class UserController extends Controller
             'password' => 'required|same:confirm-password',
             'roles' => 'required'
         ]);
-    
+        // var_dump($request->all()); die;
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
+        $input['is_approved'] = 'on';
     
         $user = User::create($input);
         $user->assignRole($request->input('roles'));
@@ -94,6 +96,30 @@ class UserController extends Controller
     
         return view('admin.users.edit',compact('user','roles','userRole', 'userListActive', 'userOpening', 'userOpend'));
     }
+
+    public function approved($id)
+    {
+
+        $settings = AppSettingsModel::create();
+        $user = User::find($id);
+        $user->client_id = $settings->id;
+        $user->is_approved = 'on';
+        $user->save();
+        
+        $roles = ['client'];
+        $user->assignRole($roles);
+        return redirect()->route('users.index')->with('success','User created successfully');
+    }
+
+    public function unapprove($id)
+    {
+        $user = User::find($id);
+        $user->is_approved = 'ban';
+        $user->save();
+        
+        return redirect()->route('users.index')->with('success','User updated successfully');
+    }
+    
     
     /**
      * Update the specified resource in storage.

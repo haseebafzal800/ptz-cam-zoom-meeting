@@ -11,7 +11,7 @@ class AppSettingsModel extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
     protected $table = 'appSettings';
-    protected $fillable = ['email', 'phone', 'address'];
+    protected $fillable = ['email', 'phone', 'address', 'zoomClientId', 'zoomClientSecret'];
 
     
 }

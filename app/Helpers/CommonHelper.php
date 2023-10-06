@@ -22,6 +22,13 @@ if (!function_exists('getAppSettings')) {
         }
     }
 }
+
+if (!function_exists('getZoomSettings')) {
+    function getZoomSettings($id=null)
+    {
+            return AppSettingsModel::where('id', $id)->first();
+    }
+}
 if (!function_exists('zoom_token')) {
     function zoom_token(Request $request){
         if(!$request->input('code')){

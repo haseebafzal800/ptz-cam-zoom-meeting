@@ -27,18 +27,61 @@ class ZoomController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     
-    public function zoom_token(Request $request){
-        if(!$request->input('code')){
-            $url = 'https://zoom.us/oauth/authorize?response_type=code&client_id=yopD5RPIRXaizWXx6jUGA&redirect_uri=http://127.0.0.1:8000/zoom-token';
-            return redirect($url);
-        }else{
-            $code = $request->input('code');
-            $accessToken = getZoomAccessToken($code);
-            dd($accessToken);
-            // $appSettings = AppSettings::where('id',1)->first();
-            // $appSettings->zoomToken = $accessToken;
-            // $appSettings->save();
-        }      
+    public function getZoomAccessToken(){
+
+            // Define your account ID and client ID/secret
+            $accountId = 'vguSzGnfTQOnVzrA2wrU8g';
+            $clientId = 'sGFjygBQhm24fxvP7XrXg';
+            $clientSecret = 'XTY2FR4Rb4QeimcvU1ZaEAc1SSQ2ICQ4';
+
+            // Encode the client ID and client secret in Base64
+            $base64Credentials = base64_encode($clientId . ':' . $clientSecret);
+
+            // Define the URL for the Zoom OAuth token endpoint
+            $tokenUrl = 'https://zoom.us/oauth/token';
+
+            // Define the data to send in the request
+            $data = [
+                'grant_type' => 'account_credentials',
+                'account_id' => $accountId,
+            ];
+
+            // Set up the cURL request
+            $ch = curl_init($tokenUrl);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Authorization: Basic ' . $base64Credentials,
+                'Content-Type: application/x-www-form-urlencoded',
+            ]);
+
+            // Execute the request
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+
+            // Check for errors
+            if ($response === false) {
+                echo 'cURL error: ' . curl_error($ch);
+                exit;
+            }
+
+            // Close the cURL session
+            curl_close($ch);
+
+            // Parse the JSON response
+            $responseData = json_decode($response, true);
+
+            // Check for errors in the response
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return false;
+                // echo 'JSON parsing error: ' . json_last_error_msg();
+                // exit;
+            }
+
+            // Store the access token in an environment variable or use it as needed
+            $accessToken = $responseData['access_token'];
+            return $accessToken;
+             
     }
     
     public function addParticipent($meetingId, $accessToken){
@@ -102,8 +145,8 @@ class ZoomController extends Controller
         curl_close($curl);
         return json_decode($response);
     }
-    public function userLvlAccess($token){
-        $accessToken = $token; // Replace with your actual access token
+    public function userLvlAccess(){ //09112240289079
+        $accessToken = $this->getZoomAccessToken(); // Replace with your actual access token
 
         $ch = curl_init();
 
@@ -127,41 +170,7 @@ class ZoomController extends Controller
 
         curl_close($ch);
     }
-    public function getZoomAccessToken($code){
-        $clientId = 'yopD5RPIRXaizWXx6jUGA';
-        $clientSecret = 'TAEPrBn5i5cGK1Xp13E65NVYGbw5V4qO';
-        $authorizationCode = $code;
-        $redirectUri = 'http://127.0.0.1:8000/zoom-token';
-
-        $base64Credentials = base64_encode($clientId . ':' . $clientSecret);
-
-        $data = [
-            'grant_type' => 'authorization_code',
-            'code' => $authorizationCode,
-            'redirect_uri' => $redirectUri,
-        ];
-
-        $options = [
-            'http' => [
-                'method' => 'POST',
-                'header' => [
-                    'Authorization: Basic ' . $base64Credentials,
-                    'Content-Type: application/x-www-form-urlencoded',
-                ],
-                'content' => http_build_query($data),
-            ],
-        ];
-
-        $context = stream_context_create($options);
-        $response = file_get_contents('https://zoom.us/oauth/token', false, $context);
-
-        if ($response === false) {
-            echo 'Error occurred while making the request.';
-        } else {
-            $resp = json_decode($response);
-            return $resp->access_token;
-        }
-    }
+    
     public function index($code='')
     {
         if($code && $code!=''){

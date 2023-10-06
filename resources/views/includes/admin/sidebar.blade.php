@@ -78,6 +78,34 @@
             </ul>
           </li>
           @endif
+          <!-- special -->
+          <?php /*<li class="nav-item {{$userOpening??''}} {{$userOpend??''}}">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Users
+                <i class="fas fa-angle-left right"></i>
+                <!-- <span class="badge badge-info right">6</span> -->
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{@url('/users')}}" class="nav-link {{$userListActive??''}}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>List</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{@url('/users/create')}}" class="nav-link {{$userCreateActive??''}}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Create New</p>
+                </a>
+              </li>
+              
+            </ul>
+          </li> */ ?>
+          <!-- special -->
+          
           @if (Gate::check('user-list') || Gate::check('user-create'))
           <li class="nav-item {{$userOpening??''}} {{$userOpend??''}}">
             <a href="#" class="nav-link">
@@ -122,7 +150,20 @@
           </li>
           @endcan
 
-          @if (Gate::check('user-list') || Gate::check('user-create'))
+          @can('zoom-settings')
+          <li class="nav-item {{$appSettingsOpening??''}} {{$appSettingsOpend??''}}">
+            <a href="{{@url('/zoom-settings')}}" class="nav-link {{$appSettings??''}}">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Zoom App Settings
+                <!-- <i class="fas fa-angle-left right"></i> -->
+                <!-- <span class="badge badge-info right">6</span> -->
+              </p>
+            </a>
+          </li>
+          @endcan
+
+          @if (Gate::check('meeting-list') || Gate::check('meeting-create'))
           <li class="nav-item {{$blogOpening??''}} {{$blogOpend??''}}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
@@ -154,7 +195,7 @@
           </li>
           @endif
 
-          @if (Gate::check('user-list') || Gate::check('user-create'))
+          @if (Gate::check('camera-settings') || Gate::check('camera-settings'))
           <li class="nav-item {{$cameraSettingsOpening??''}} {{$cameraSettingsOpend??''}}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
@@ -165,7 +206,7 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-            @can('user-list')
+            @can('camera-settings')
             <li class="nav-item">
               <a href="{{@url('/camera-settings')}}" class="nav-link {{$cameraSettings??''}}">
                   <i class="far fa-circle nav-icon"></i>

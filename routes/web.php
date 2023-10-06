@@ -44,6 +44,12 @@ Route::post('fullcalenderAjax', [MeetingController::class, 'ajax']);
 //Camera settings
 Route::get('camera-settings', [CameraController::class, 'index']);
 
+Route::get('users/approved/{id}', [UserController::class, 'approved'])->name('users.approved');
+Route::get('users/unapprove/{id}', [UserController::class, 'unapprove'])->name('users.unapprove');
+
+// Zoom App Settings
+Route::get('/zoom-settings', [AppsettingsConteroller::class, 'zoomSettings'])->name('zoom-settings');
+Route::post('/zoom-settings/update', [AppsettingsConteroller::class, 'zoomSettingsUpdate'])->name('zoom-settings-update');
 
 // roles n permissions
 Route::group(['middleware' => ['auth']], function() {
