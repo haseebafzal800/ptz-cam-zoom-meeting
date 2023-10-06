@@ -5,10 +5,11 @@
       <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
         <div class="row">
-          @if(!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('client') && !Auth::user()->hasRole('producer'))
+          @if(!Auth::user()->hasRole('Admin') && !Auth::user()->hasRole('Client') && !Auth::user()->hasRole('Producer'))
           <div class="col-lg-12 col-12">
             <p class="text text-center alert alert-warning">Please wait for admin approval</p>
           </div>
+          @else
           <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-info">

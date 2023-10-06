@@ -42,7 +42,7 @@ var calendar = $('#calendar').fullCalendar({
                     events: SITEURL + "/meetings",
                     displayEventTime: false,
                     editable: true,
-                    slotDuration: '00:30:00',
+                    slotDuration: '01:00:00',
                     // defaultView: "agendaWeek",
                     // header: {
                     //     left: "prev,next",
@@ -67,7 +67,7 @@ var calendar = $('#calendar').fullCalendar({
                             displayError('Operation not allowed in previous dates', 'Error !');
                             return false;
                         }*/
-                        var title = prompt('Event Title:');
+                        //var title = prompt('Meeting Details:');
                         if (title) {
                             var start = $.fullCalendar.formatDate(start, "YYYY-MM-DD HH:mm:ss");
                             var end = $.fullCalendar.formatDate(end, "YYYY-MM-DD HH:mm:ss");

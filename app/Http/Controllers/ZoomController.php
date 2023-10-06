@@ -8,6 +8,8 @@ use App\Models\AppSettings;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
+
 
 class ZoomController extends Controller
 {
@@ -30,10 +32,10 @@ class ZoomController extends Controller
     public function getZoomAccessToken(){
 
             // Define your account ID and client ID/secret
-            $accountId = 'vguSzGnfTQOnVzrA2wrU8g';
-            $clientId = 'sGFjygBQhm24fxvP7XrXg';
-            $clientSecret = 'XTY2FR4Rb4QeimcvU1ZaEAc1SSQ2ICQ4';
-
+            $zoomCreds = getZoomSettings(Auth::user()->client_id);
+            $accountId = $zoomCreds->zoomAccountId; //'vguSzGnfTQOnVzrA2wrU8g';
+            $clientId = $zoomCreds->zoomClientId; //'sGFjygBQhm24fxvP7XrXg';
+            $clientSecret = $zoomCreds->zoomClientSecret; //'XTY2FR4Rb4QeimcvU1ZaEAc1SSQ2ICQ4';
             // Encode the client ID and client secret in Base64
             $base64Credentials = base64_encode($clientId . ':' . $clientSecret);
 
@@ -59,15 +61,14 @@ class ZoomController extends Controller
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $response = curl_exec($ch);
 
-            // Check for errors
-            if ($response === false) {
-                echo 'cURL error: ' . curl_error($ch);
-                exit;
-            }
-
+            
             // Close the cURL session
             curl_close($ch);
-
+            
+            // Check for errors
+            if ($response === false) {
+                return false;
+            }
             // Parse the JSON response
             $responseData = json_decode($response, true);
 
@@ -115,7 +116,12 @@ class ZoomController extends Controller
         return json_decode($response);
     }
     public function createMeeting(Request $request) {
-        $data = [
+        $accessToken = getZoomAccessToken();
+        $user = userLvlAccess();
+        if($accessToken && $user){
+            $user_id = $user->id;
+            // dd($user);
+            $data = [
                 "agenda"=>"My Meeting for test",
                 "default_password"=>false,
                 "duration"=>60,
@@ -123,53 +129,33 @@ class ZoomController extends Controller
                 // "schedule_for"=>"asif.zardari.ppp1@gmail.com",
             ];
             // CURLOPT_POSTFIELDS =>"{\r\n  \"agenda\": \"My Meeting for test\",\r\n  \"default_password\": false,\r\n  \"duration\": 60,\r\n  \"password\": \"123456\"\r\n}",
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://api.zoom.us/v2/users/$user_id/meetings",
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS =>json_encode($data),
-        CURLOPT_HTTPHEADER => array(
-            "Authorization: Bearer  $accessToken",
-            "Content-Type: application/json"
-        ),
-        ));
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.zoom.us/v2/users/$user_id/meetings",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS =>json_encode($data),
+            CURLOPT_HTTPHEADER => array(
+                "Authorization: Bearer  $accessToken",
+                "Content-Type: application/json"
+            ),
+            ));
 
-        $response = curl_exec($curl);
+            $response = curl_exec($curl);
 
-        curl_close($curl);
-        return json_decode($response);
-    }
-    public function userLvlAccess(){ //09112240289079
-        $accessToken = $this->getZoomAccessToken(); // Replace with your actual access token
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, 'https://api.zoom.us/v2/users/me');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-
-        $headers = array(
-            'Authorization: Bearer ' . $accessToken,
-        );
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        $result = curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            echo 'Error occurred: ' . curl_error($ch);
-        } else {
-            return json_decode($result);
+            curl_close($curl);
+            return json_decode($response);
+        }else{
+            dd('Something went wrong');
         }
-
-        curl_close($ch);
+        
     }
+    
     
     public function index($code='')
     {

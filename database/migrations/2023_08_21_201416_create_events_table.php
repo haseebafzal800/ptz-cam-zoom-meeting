@@ -19,6 +19,15 @@ class CreateEventsTable extends Migration
             $table->text('description');
             $table->date('start');
             $table->date('end');
+            $table->string('host_email');
+            $table->string('host_id');
+            $table->string('zoom_meeting_id');
+            $table->string('zoom_meeting_duration');
+            $table->text('meeting_start_url');
+            $table->text('meeting_join_url');
+            $table->string('meeting_password');
+            $table->string('meeting_timezone');
+            $table->integer('client_id');
             $table->timestamps();
         });
     }

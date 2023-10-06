@@ -14,7 +14,7 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              @if(Auth::user()->hasRole('admin'))
+              @if(Auth::user()->hasRole('Admin'))
               <form id="quickForm" method="post" action="{{ route('app-settings-update')}}" enctype="multipart/form-data">
                 <div class="card-body">
                   <div class="row">
@@ -117,6 +117,16 @@
                   <div class="row">
                     @csrf
                     <input type="hidden" name="id" value="{{ $item->id }}">
+
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="zoomAccountId">Zoom Client Account Id</label>
+                        <input type="text" name="zoomAccountId"  value="{{ $item->zoomAccountId }}" class="form-control" id="zoomAccountId" placeholder="Zoom Client Id">
+                        @error('zoomAccountId')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                      </div>
+                    </div>
                     <div class="col-sm-6">
                       <div class="form-group">
                         <label for="zoomClientId">Zoom Client Id</label>

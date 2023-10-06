@@ -10,7 +10,8 @@ use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
 use Illuminate\Support\Arr;
-    
+use Illuminate\Support\Facades\Auth;
+
 class UserController extends Controller
 {
     /**
@@ -20,7 +21,12 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $data = User::orderBy('id','DESC')->paginate(5);
+        if(Auth::user()->hasRole('Admin')){
+            $data = User::orderBy('id','DESC')->paginate(5);
+        }elseif(Auth::user()->hasRole('Client')){
+            $data = User::orderBy('id','DESC')->where('client_id', Auth::user()->client_id)->paginate(5);
+        }
+        
         $userListActive = 'active';
         $userOpening = 'menu-is-opening';
         $userOpend = 'menu-open';
@@ -50,6 +56,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        if(Auth::user()->hasRole('Client')){
+            $request->request->add(['roles' => ['Client']]);
+        }
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
@@ -58,11 +67,26 @@ class UserController extends Controller
         ]);
         // var_dump($request->all()); die;
         $input = $request->all();
+        if(Auth::user()->hasRole('Client')){
+            $input['client_id'] = Auth::user()->client_id;
+        }else{
+            $settings = AppSettingsModel::create();
+            $input['client_id'] = $settings->id;
+        }
+        
         $input['password'] = Hash::make($input['password']);
         $input['is_approved'] = 'on';
-    
+        
+        // var_dump($input); die;
+
         $user = User::create($input);
-        $user->assignRole($request->input('roles'));
+        if(Auth::user()->hasRole('Client')){
+            $roles = ['Producer'];
+            $user->assignRole($roles);
+        }else{
+            $user->assignRole($request->input('roles'));
+        }
+        
     
         return redirect()->route('users.index')->with('success','User created successfully');
     }
@@ -130,6 +154,9 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(Auth::user()->hasRole('Client')){
+            $request->request->add(['roles' => ['Client']]);
+        }
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$id,
@@ -146,10 +173,10 @@ class UserController extends Controller
     
         $user = User::find($id);
         $user->update($input);
-        DB::table('model_has_roles')->where('model_id',$id)->delete();
-    
-        $user->assignRole($request->input('roles'));
-    
+        if(Auth::user()->hasRole('Admin')){
+            DB::table('model_has_roles')->where('model_id',$id)->delete();
+            $user->assignRole($request->input('roles'));
+        }
         return redirect()->route('users.index')
                         ->with('success','User updated successfully');
     }

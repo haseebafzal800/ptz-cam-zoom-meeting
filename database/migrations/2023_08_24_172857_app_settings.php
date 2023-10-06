@@ -21,7 +21,7 @@ class AppSettings extends Migration
             $table->text('address');
             $table->text('zoomClientId');
             $table->text('zoomClientSecret');
-            $table->text('zoomToken');
+            $table->text('zoomAccountId');
             $table->text('zoomRedirectUrl');
             $table->timestamps();
         });

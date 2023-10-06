@@ -36,7 +36,7 @@
                 <td>{{ ++$i }}</td>
                 <td>{{ $role->name }}</td>
                 <td>
-                    <a class="btn btn-xs btn-info" href="{{ route('roles.show',$role->id) }}"><i class="fas fa-eye"></i></a>
+                    <!-- <a class="btn btn-xs btn-info" href="{{ route('roles.show',$role->id) }}"><i class="fas fa-eye"></i></a> -->
                     @can('role-edit')
                         <a class="btn  btn-xs btn-primary" href="{{ route('roles.edit',$role->id) }}"><i class="fas fa-pencil-alt"></i></a>
                     @endcan
