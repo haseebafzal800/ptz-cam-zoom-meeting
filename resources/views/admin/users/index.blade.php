@@ -45,6 +45,14 @@
             </td>
             <td>
             <!-- <a class="btn btn-xs btn-info" href="{{ route('users.show',$user->id) }}"><i class="fas fa-eye"></i></a> -->
+            @if($user->client_id > 0 && $user->is_approved=='on')
+                <a class="btn btn-xs btn-primary" href="{{ route('users.unapprove',$user->id) }}"><i class="fas fa-check"></i></a>
+            @elseif($user->client_id == '' && $user->is_approved=='ban')
+                <a class="btn btn-xs btn-danger" href="{{ route('users.unapprove',$user->id) }}"><i class="fas fa-ban"></i></a>
+            @else
+                <a class="btn btn-xs btn-primary" href="{{ route('users.approved',$user->id) }}"><i class="fas fa-check"></i></a>
+                <a class="btn btn-xs btn-danger" href="{{ route('users.unapprove',$user->id) }}"><i class="fas fa-ban"></i></a>
+            @endif
             <a class="btn btn-xs btn-primary" href="{{ route('users.edit',$user->id) }}"><i class="fas fa-pencil-alt"></i></a>
                 {!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $user->id],'style'=>'display:inline']) !!}
                 <button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button>

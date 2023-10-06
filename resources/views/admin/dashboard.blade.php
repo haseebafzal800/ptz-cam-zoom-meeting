@@ -5,6 +5,10 @@
       <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
         <div class="row">
+          @if(!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('client') && !Auth::user()->hasRole('producer'))
+          <div class="col-lg-12 col-12">
+            <p class="text text-center alert alert-warning">Please wait for admin approval</p>
+          </div>
           <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-info">
@@ -67,6 +71,7 @@
               <a href="/meetings" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
+          @endif
           <!-- ./col -->
         </div>
         <!-- /.row -->

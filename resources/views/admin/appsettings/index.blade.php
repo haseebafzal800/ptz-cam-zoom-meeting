@@ -14,6 +14,7 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
+              @if(Auth::user()->hasRole('admin'))
               <form id="quickForm" method="post" action="{{ route('app-settings-update')}}" enctype="multipart/form-data">
                 <div class="card-body">
                   <div class="row">
@@ -110,6 +111,72 @@
                   <input type="submit" class="btn btn-primary" value="submit">
                 </div>
               </form>
+              @else
+              <form id="quickForm" method="post" action="{{ route('zoom-settings-update')}}" enctype="multipart/form-data">
+                <div class="card-body">
+                  <div class="row">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $item->id }}">
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="zoomClientId">Zoom Client Id</label>
+                        <input type="text" name="zoomClientId"  value="{{ $item->zoomClientId }}" class="form-control" id="zoomClientId" placeholder="Zoom Client Id">
+                        @error('zoomClientId')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="zoomClientSecret">Zoom Client Secret</label>
+                        <input type="text" name="zoomClientSecret"  value="{{ $item->zoomClientSecret }}" class="form-control" id="zoomClientSecret" placeholder="Zoom Client Secret">
+                        @error('zoomClientSecret')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                      </div>
+                    </div>
+                    
+                    
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        
+                      </div>
+                    </div>
+                  </div>
+                  <?php /*<div class="d-none">
+                  <div class="form-group">
+                    <label for="summernote">Body</label>
+                    <textarea name="body" id="summernote">{{ $item->body }}</textarea>
+                    @error('body')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                  </div>
+                  
+
+                  <div class="form-group">
+                    <label for="mataDescription">Mata Description</label>
+                    <input type="text" name="mataDescription" value="{{ $item->mataDescription }}" class="form-control" id="mataDescription" placeholder="Enter Mata Description">
+                    @error('mataDescription')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                  </div>
+
+                  <div class="form-group">
+                    <label for="mataTags">Mata Tags</label>
+                    <input type="text" name="mataTags" value="{{ $item->mataTags }}" class="form-control" id="mataTags" placeholder="Enter Mata Tags">
+                    @error('mataTags')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                  </div>
+                  </div> */ ?>
+
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                  <input type="submit" class="btn btn-primary" value="submit">
+                </div>
+              </form>
+              @endif
             </div>
             <!-- /.card -->
             </div>

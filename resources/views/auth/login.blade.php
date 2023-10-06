@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ config('app.name', 'Laravel') }} | Log in (v2)</title>
+  <title>{{ config('app.name', 'Laravel') }} | Log in</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -76,9 +76,9 @@
             </a>
             @endif
       </p>
-      <!-- <p class="mb-0">
-        <a href="register.html" class="text-center">Register a new membership</a>
-      </p> -->
+      <p class="mb-0">
+        <a href="/register" class="text-center">Register a new membership</a>
+      </p>
     </div>
     <!-- /.card-body -->
   </div>
