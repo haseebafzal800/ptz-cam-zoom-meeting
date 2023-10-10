@@ -176,9 +176,15 @@
             <ul class="nav nav-treeview">
             @can('user-list')
             <li class="nav-item">
-              <a href="{{@url('/meetings')}}" class="nav-link {{$blogListActive??''}}">
+              <a href="{{@url('/meetings/calendar')}}" class="nav-link {{$blogListActive??''}}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Calendar</p>
+                </a>
+              </li>
+            <li class="nav-item">
+              <a href="{{@url('/meetings')}}" class="nav-link {{$blogListActive??''}}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Meeting</p>
                 </a>
               </li>
               @endcan

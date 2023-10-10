@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\ParticipentController;
 use App\Http\Controllers\AppsettingsConteroller;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\CameraController;
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -38,8 +38,12 @@ Route::get('/app-settings', [AppsettingsConteroller::class, 'index'])->name('app
 Route::post('/app-settings/update', [AppsettingsConteroller::class, 'update'])->name('app-settings-update')->middleware('is_admin');
 
 // full calander
-Route::get('meetings', [MeetingController::class, 'index']);
+Route::get('meetings', [MeetingController::class, 'index'])->name('meetings');
+Route::get('meetings/calendar', [MeetingController::class, 'calendar']);
 Route::post('fullcalenderAjax', [MeetingController::class, 'ajax']);
+
+// meeting participents
+Route::get('meeting/{id}/participents', [ParticipentController::class, 'index']);
 
 //Camera settings
 Route::get('camera-settings', [CameraController::class, 'index']);

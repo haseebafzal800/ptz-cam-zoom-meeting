@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\AppSettingsModel;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 if (!function_exists('getTestomonials')) {
@@ -107,10 +110,115 @@ if (!function_exists('userLvlAccess')) {
             if (curl_errno($ch)) {
                 return false;
             } else {
-                return json_decode($result);
+                $user = json_decode($result);
+                $dbUser = User::find(Auth::user()->id);
+                $dbUser->zoom_user_id = $user->id;
+                $dbUser->save();
+                return json_decode($user);
             }
 
             curl_close($ch);
+        }
+    }
+    if (!function_exists('createMeeting')) {
+        function createMeeting($data) {
+            $accessToken = getZoomAccessToken();
+            $user_id = Auth::user()->zoom_user_id;
+            if($user_id==''){
+                $user = userLvlAccess();
+                $user_id = $user->id;
+            }
+            if($accessToken && $user_id){
+                // $user_id = $user->id;
+                
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                CURLOPT_URL => "https://api.zoom.us/v2/users/$user_id/meetings",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS =>json_encode($data),
+                CURLOPT_HTTPHEADER => array(
+                    "Authorization: Bearer  $accessToken",
+                    "Content-Type: application/json"
+                ),
+                ));
+
+                $response = curl_exec($curl);
+
+                curl_close($curl);
+                // return $response;
+                return json_decode($response);
+            }else{
+                dd('Something went wrong');
+            }
+            
+        }
+    }
+    
+    function meetingDelete($meeting_id, $json = '')
+    {
+        $accessToken = getZoomAccessToken();
+        if($accessToken){
+
+            // Replace with your Zoom API access token and meeting ID
+            $access_token = getZoomAccessToken();
+
+            // Construct the URL for the DELETE request
+            $url = "https://api.zoom.us/v2/meetings/{$meeting_id}";
+
+            // Set up the headers with the Authorization token
+            $headers = array(
+                "Authorization: Bearer {$access_token}"
+            );
+
+            // Initialize cURL session
+            $ch = curl_init($url);
+
+            // Set cURL options
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            // Execute cURL session and get the response
+            $response = curl_exec($ch);
+            $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            // Check the response status code and handle any errors
+            if ($response_code == 204) {
+                // echo "Meeting deleted successfully.";
+                return true;
+            } else {
+                return false;
+                // echo "Error deleting meeting. Status code: {$response_code}\n";
+                // echo $response;
+            }
+
+            // Close cURL session
+            curl_close($ch);
+
+        }else{
+            return false;
+        }
+    }
+    function addRegistrantInToMeeting(){
+        
+    }
+    if (!function_exists('setCookies')) {
+        function setCookies($mins=(30 * 24 * 60), $name, $value){
+            $response = new Response('Set Cookie');
+            $response->withCookie(cookie($name, $value, $minutes));
+            return $response;
+        }
+    }
+    if (!function_exists('getCookie')) {
+        function getCookie($name){
+            $value = request()->cookie($name);
+            return $value ?? null;
         }
     }
 }

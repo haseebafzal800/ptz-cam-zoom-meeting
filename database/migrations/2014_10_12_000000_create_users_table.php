@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->enum('is_approved', ['off', 'on', 'ban'])->default('off');
             $table->string('password');
             $table->integer('client_id')->nullable();
+            $table->string('zoom_user_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

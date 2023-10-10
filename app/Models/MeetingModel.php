@@ -9,5 +9,5 @@ class MeetingModel extends Model
 {
     use HasFactory;
     protected $table = 'meetings';
-    protected $fillable = ['title', 'description', 'start','end'];
+    protected $fillable = ['title', 'description', 'host_email', 'host_id', 'zoom_meeting_id', 'zoom_meeting_duration', 'meeting_start_url', 'meeting_join_url', 'meeting_password', 'meeting_timezone', 'client_id', 'start', 'end'];
 }
