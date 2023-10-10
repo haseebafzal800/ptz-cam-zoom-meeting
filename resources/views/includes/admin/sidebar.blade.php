@@ -42,7 +42,7 @@
             </a>
           </li>
           <li class="nav-item {{$dashboardOpening ?? ''}}  {{$dashboardOpend ?? ''}}">
-            <a href="{{@url('/chatify')}}" class="nav-link {{$dashboardActive??''}}">
+            <a href="{{@url('/chat')}}" class="nav-link {{$dashboardActive??''}}">
               <i class="far fa-circle nav-icon"></i>
               <p>Chat</p>
             </a>

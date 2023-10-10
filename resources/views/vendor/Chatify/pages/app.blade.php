@@ -78,6 +78,11 @@
         {{-- Messaging area --}}
         <div class="m-body messages-container app-scroll">
             <div class="messages">
+                @if(session('message'))
+    <div class="alert alert-danger">
+        {{ session('message') }}
+    </div>
+@endif
                 <p class="message-hint center-el"><span>Please select a chat to start messaging</span></p>
             </div>
             {{-- Typing indicator --}}

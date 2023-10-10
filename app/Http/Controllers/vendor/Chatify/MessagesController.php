@@ -44,6 +44,7 @@ class MessagesController extends Controller
      */
     public function index( $id = null)
     {
+        // dd('dsdsdsds');
         $messenger_color = Auth::user()->messenger_color;
         return view('Chatify::pages.app', [
             'id' => $id ?? 0,
@@ -168,6 +169,8 @@ class MessagesController extends Controller
      */
     public function fetch(Request $request)
     {
+        // dd('assas');
+        
         $query = Chatify::fetchMessagesQuery($request['id'])->latest();
         $messages = $query->paginate($request->per_page ?? $this->perPage);
         $totalMessages = $messages->total();
@@ -332,10 +335,21 @@ class MessagesController extends Controller
     public function search(Request $request)
     {
         $getRecords = null;
+        $role = Auth::user()->roles->first()->name;
         $input = trim(filter_var($request['input']));
         $records = User::where('id','!=',Auth::user()->id)
-                    ->where('name', 'LIKE', "%{$input}%")
-                    ->paginate($request->per_page ?? $this->perPage);
+                    ->where('name', 'LIKE', "%{$input}%");
+                    // ->paginate($request->per_page ?? $this->perPage);
+                    if($role=='Client'){
+                        $records->where('client_id', Auth::user()->client_id);
+                       } 
+                       elseif($role=='Producer') {
+                            $records->whereHas('roles', function ($query) {
+                                $query->where('client_id', Auth::user()->client_id)->where('name', 'Client');
+                            });
+                        
+                       }
+                       $records = $records->paginate($request->per_page ?? $this->perPage);
         foreach ($records->items() as $record) {
             $getRecords .= view('Chatify::layouts.listItem', [
                 'get' => 'search_item',
@@ -349,7 +363,7 @@ class MessagesController extends Controller
         return Response::json([
             'records' => $getRecords,
             'total' => $records->total(),
-            'last_page' => $records->lastPage()
+            'last_page' => $records->lastPage(),
         ], 200);
     }
 
