@@ -13,7 +13,7 @@ class CameraController extends Controller
         $data['cameraSettings'] = 'active';
         $data['cameraSettingsOpend'] = 'menu-open';
         $data['cameraSettingsOpening'] = 'menu-is-opening';
-        return view('admin.camera.index', $data);
-        // return view('admin.camera.cam', $data);
+        // return view('admin.camera.index-multi-cam', $data);
+        return view('admin.camera.cam', $data);
     }
 }

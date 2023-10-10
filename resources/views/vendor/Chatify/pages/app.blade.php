@@ -1,4 +1,12 @@
+@extends('layouts.admin.default')
+@section('content')
+@include('includes.admin.breadcrumb')
 @include('Chatify::layouts.headLinks')
+<style>
+    .content-header{
+        display: none;
+    }
+</style>
 <div class="messenger">
     {{-- ----------------------Users/Groups lists side---------------------- --}}
     <div class="messenger-listView {{ !!$id ? 'conversation-active' : '' }}">
@@ -115,3 +123,12 @@
 
 @include('Chatify::layouts.modals')
 @include('Chatify::layouts.footerLinks')
+
+@include('includes.admin.scripts')
+
+<script>
+$(document).ready(function () {
+$('body').addClass('sidebar-collapse');
+})
+</script>
+@stop

@@ -72,7 +72,7 @@
           
             processing: true,
             serverSide: true,
-            ajax: "{{ route('meetings') }}",
+            ajax: '{{ @url("meeting/request()->segment(2)/participents") }}',
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'title', name: 'title'},

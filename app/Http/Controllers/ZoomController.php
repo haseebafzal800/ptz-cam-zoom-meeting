@@ -121,12 +121,63 @@ class ZoomController extends Controller
         if($accessToken && $user){
             $user_id = $user->id;
             // dd($user);
+            // $data = [
+            //     "agenda"=>"My Meeting for test",
+            //     "default_password"=>false,
+            //     "duration"=>60,
+            //     "password"=>"123456",
+            //     // "schedule_for"=>"asif.zardari.ppp1@gmail.com",
+            // ];
             $data = [
-                "agenda"=>"My Meeting for test",
-                "default_password"=>false,
-                "duration"=>60,
-                "password"=>"123456",
-                // "schedule_for"=>"asif.zardari.ppp1@gmail.com",
+                "agenda"=> "My Meeting",
+                "default_password"=> false,
+                "duration"=> 60,
+                "password"=> "123456",
+                "pre_schedule"=> false,
+                "settings"=> [
+                    
+                    "allow_multiple_devices"=> true,
+                    "approval_type"=> 2,
+                    "calendar_type"=> 1,
+                    "close_registration"=> false,
+                    "contact_email"=> "jchill@example.com",
+                    "contact_name"=> "Jill Chill",
+                    "email_notification"=> true,
+                    "encryption_type"=> "enhanced_encryption",
+                    "focus_mode"=> true,
+                    "join_before_host"=> false,
+                    "meeting_authentication"=> true,
+                    "meeting_invitees"=> [
+                        [
+                            "email"=> "jchill@example.com"
+                        ]
+                    ],
+                    "mute_upon_entry"=> false,
+                    "participant_video"=> false,
+                    "private_meeting"=> false,
+                    "registrants_confirmation_email"=> true,
+                    "registrants_email_notification"=> true,
+                    "registration_type"=> 1,
+                    "show_share_button"=> true,
+                    "use_pmi"=> false,
+                    "waiting_room"=> false,
+                    "watermark"=> false,
+                    "host_save_video_order"=> true,
+                    "internal_meeting"=> false,
+                    "participant_focused_meeting"=> false,
+                    "push_change_to_calendar"=> false
+                ],
+                "start_time"=> "2022-03-25T07:32:55Z",
+                "template_id"=> "Dv4YdINdTk+Z5RToadh5ug==",
+                "timezone"=> "America/Los_Angeles",
+                "topic"=> "My Meeting",
+                "tracking_fields"=> [
+                    [
+                        "field"=> "field1",
+                        "value"=> "value1"
+                    ]
+                ],
+                "type"=> 2
             ];
             // CURLOPT_POSTFIELDS =>"{\r\n  \"agenda\": \"My Meeting for test\",\r\n  \"default_password\": false,\r\n  \"duration\": 60,\r\n  \"password\": \"123456\"\r\n}",
             $curl = curl_init();
