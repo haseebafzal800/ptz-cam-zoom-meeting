@@ -205,13 +205,85 @@ if (!function_exists('userLvlAccess')) {
             return false;
         }
     }
-    function addRegistrantInToMeeting(){
-        
+    function addRegistrantInToMeeting($meetingId, $data){
+        $url = "https://api.zoom.us/v2/meetings/$meetingId/registrants";
+        $accessToken = getZoomAccessToken();
+        if($accessToken){
+            // $user_id = $user->id;
+            $headers = array(
+                "Authorization: Bearer $accessToken",
+                "Content-Type: application/json",
+            );
+            
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+            $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            // return $response;
+            if ($http_status == 201) {
+                return json_decode($response);
+            }else{
+                return false;
+            }
+
+        }else{
+            return false;
+        }
+    }
+    function participentDelete($meetingId, $registrantId, $json = '')
+    {
+        $accessToken = getZoomAccessToken();
+        if($accessToken){
+
+            // Replace with your Zoom API access token and meeting ID
+            $access_token = getZoomAccessToken();
+
+            // Construct the URL for the DELETE request
+            $url = "https://api.zoom.us/v2/meetings/$meetingId/registrants/$registrantId";
+
+            // Set up the headers with the Authorization token
+            $headers = array(
+                "Authorization: Bearer {$access_token}"
+            );
+
+            // Initialize cURL session
+            $ch = curl_init($url);
+
+            // Set cURL options
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            // Execute cURL session and get the response
+            $response = curl_exec($ch);
+            $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            // Check the response status code and handle any errors
+            if ($response_code == 204) {
+                // echo "Meeting deleted successfully.";
+                return true;
+            } else {
+                return false;
+                // echo "Error deleting meeting. Status code: {$response_code}\n";
+                // echo $response;
+            }
+
+            // Close cURL session
+            curl_close($ch);
+
+        }else{
+            return false;
+        }
     }
     if (!function_exists('setCookies')) {
-        function setCookies($mins=(30 * 24 * 60), $name, $value){
+        function setCookies($name, $value, $mins=(30 * 24 * 60)){
             $response = new Response('Set Cookie');
-            $response->withCookie(cookie($name, $value, $minutes));
+            $response->withCookie(cookie($name, $value, $mins));
             return $response;
         }
     }

@@ -14,87 +14,38 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form id="quickForm" method="post" action="{{@url('/admin/blogs/save')}}" enctype="multipart/form-data">
+              <form id="quickForm" method="post" action="{{@url('/meeting/store-participent')}}" enctype="multipart/form-data">
                 <div class="card-body">
                 @csrf
+                <input type="hidden" name="meeting_id" value="{{request()->segment(2)}}">
                   <div class="form-group">
-                    <label for="title">Title</label>
-                    <input type="text" name="title" value="{{ old('title') }}" class="form-control" id="title" placeholder="Enter Title">
-                    @error('title')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                  </div>
-
-                  <div class="form-group">
-                    <label for="title">Title</label>
-                    <select name="tag_id" class="form-control" id="tag_id">
-                      <option value="" selected disabled>Select Tag</option>
-                      @foreach($tags as $tag)
-                        <option value="{{$tag->id}}">{{$tag->tag}}</option>
-                      @endforeach
-                    </select>
-                    @error('tag_id')
+                    <label for="first_name">First Name</label>
+                    <input type="text" name="first_name" value="{{ old('first_name') }}" class="form-control" id="first_name" placeholder="Enter First Name">
+                    @error('first_name')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                   </div>
                   <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea name="description" class="form-control" id="description" placeholder="Description">{{ old('description') }}</textarea>
-                    @error('description')
+                    <label for="last_name">Last Name</label>
+                    <input type="text" name="last_name" value="{{ old('last_name') }}" class="form-control" id="last_name" placeholder="Enter Last Name">
+                    @error('last_name')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                   </div>
                   <div class="form-group">
-                    <label for="summernote">Post</label>
-                    <textarea name="post" id="summernote">{{ old('post') }}</textarea>
-                    @error('post')
+                    <label for="email">Email</label>
+                    <input type="text" name="email" value="{{ old('email') }}" class="form-control" id="email" placeholder="Enter Email">
+                    @error('email')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                   </div>
                   <div class="form-group">
-                    <div class="custom-control custom-switch">
-                      <input type="checkbox" {{ old('is_featured')?'checked':'' }} name="is_featured" class="custom-control-input" id="customSwitch1">
-                      <label class="custom-control-label" for="customSwitch1">Is Featured</label>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="mataTitle">Mata Title</label>
-                    <input type="text" name="mataTitle"  value="{{ old('mataTitle') }}" class="form-control" id="mataTitle" placeholder="Enter Mata Title">
-                    @error('mataTitle')
+                    <label for="phone">Phone</label>
+                    <input type="text" name="phone" value="{{ old('phone') }}" class="form-control" id="phone" placeholder="Enter Phone">
+                    @error('phone')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                   </div>
-
-                  <div class="form-group">
-                    <label for="mataDescription">Mata Description</label>
-                    <input type="text" name="mataDescription" value="{{ old('mataDescription') }}" class="form-control" id="mataDescription" placeholder="Enter Mata Description">
-                    @error('mataDescription')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                  </div>
-
-                  <div class="form-group">
-                    <label for="mataTags">Mata Tags</label>
-                    <input type="text" name="mataTags" value="{{ old('mataTags') }}" class="form-control" id="mataTags" placeholder="Enter Mata Tags">
-                    @error('mataTags')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                  </div>
-
-                  <div class="form-group custom-img-hanlder">
-                    <label class="img-hldr">
-                          <div class="row-custom">
-                            <img id="image-container1" class="img img-fluid" />
-                            <input class="invisible" type="file" accept="image/*" name="image" id="image-upload" /><br>
-                          </div>
-                          <button id="cancel-btn" class="btn btn-xs btn-danger" ><i class="fa fa-trash"></i></button>
-                          @error('image')
-                            <div class="text-danger">{{ $message }}</div>
-                          @enderror
-                      </label>
-                      <br>
-                    </div>
-                  
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">

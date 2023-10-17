@@ -142,7 +142,7 @@ $.ajaxSetup({
 
 var calendar = $('#calendar').fullCalendar({
                     editable: true,
-                    events: SITEURL + "/meetings",
+                    events: SITEURL + "/meetings/calendar",
                     displayEventTime: true,
                     editable: true,
                     slotDuration: '01:00:00',
