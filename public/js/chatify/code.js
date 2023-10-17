@@ -937,9 +937,9 @@ function updateContactItem(user_id) {
           //  var backgroundImageURL = $table.find('div.avatar').css('background-image');
           var backgroundImageURL = $table.find('div.avatar').css('background-image');
           var actualImageURL = backgroundImageURL.replace(/url\(['"](.+)['"]\)/, '$1');
-
+           console.log('contactId', contactId);
            $('#message-count').text(messageCount);
-           $('#messages_12').prepend(`<a href="#" class="dropdown-item"><div class="media">
+           $('#messages_12').prepend(`<a href="`+url+`/chat" class="dropdown-item"><div class="media">
            <img src="`+actualImageURL+`" alt="User Avatar" class="img-size-50 mr-3 img-circle">
            <div class="media-body">
              <h3 class="dropdown-item-title">
