@@ -924,6 +924,35 @@ function updateContactItem(user_id) {
         }
         // update data-action required with [responsive design]
         cssMediaQueries();
+
+         // ***************** Rasheed Ullah Code***************
+         var $table = $(data.contactItem);
+         if ($table.length > 0) {
+           // Extract data from the elements within the table
+           var contactId = $table.attr('data-contact');
+           var userName = $table.find('p[data-type="user"]').text().trim();
+           var lastActive = $table.find('.contact-item-time').attr('data-time');
+           var messageCount = $table.find('b').text().trim();
+           var messageText = $table.find('td span:not(.contact-item-time)').text().trim();
+          //  var backgroundImageURL = $table.find('div.avatar').css('background-image');
+          var backgroundImageURL = $table.find('div.avatar').css('background-image');
+          var actualImageURL = backgroundImageURL.replace(/url\(['"](.+)['"]\)/, '$1');
+
+           $('#message-count').text(messageCount);
+           $('#messages_12').prepend(`<a href="#" class="dropdown-item"><div class="media">
+           <img src="`+actualImageURL+`" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+           <div class="media-body">
+             <h3 class="dropdown-item-title">
+               `+userName+`
+             </h3>
+             <p class="text-sm" >`+messageText+`</p>
+           </div>
+         </div></a><div class="dropdown-divider"></div>`);
+           // Output the extracted data
+         } else {
+           console.log('Table not found in the HTML content.');
+         }
+         // ***************** Rasheed Ullah Code***************
       },
       error: (error) => {
         console.error(error);
