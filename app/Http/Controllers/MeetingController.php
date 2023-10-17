@@ -15,7 +15,12 @@ class MeetingController extends Controller
     {
         
         if ($request->ajax()) {
-            $data = MeetingModel::select('id','title','description','start', 'host_email', 'meeting_start_url', 'meeting_join_url', 'meeting_password', 'meeting_timezone')->get();
+            if(Auth::user()->hasRole('Admin')){
+                $data = MeetingModel::select('id','title','description','start', 'host_email', 'meeting_start_url', 'meeting_join_url', 'meeting_password', 'meeting_timezone')->get();
+            }else{
+                $data = MeetingModel::select('id','title','description','start', 'host_email', 'meeting_start_url', 'meeting_join_url', 'meeting_password', 'meeting_timezone')->where('client_id', Auth::user()->client_id)->get();
+            }
+
             return Datatables::of($data)->addIndexColumn()
                 ->editColumn('created_at', function ($row) {
                     return Carbon::parse($row->start)->format('M d, Y H:i:s');
@@ -31,9 +36,9 @@ class MeetingController extends Controller
                 ->make(true);
             }
         $data['pageTitle'] = 'Meetings';
-        $data['blogListActive'] = 'active';
-        $data['blogOpening'] = 'menu-is-opening';  
-        $data['blogOpend'] = 'menu-open';
+        $data['meetingListActive'] = 'active';
+        $data['meetingOpening'] = 'menu-is-opening';  
+        $data['meetingOpend'] = 'menu-open';
         return view('admin.meetings.index', $data);
     }
     public function calendar(Request $request)
@@ -43,6 +48,7 @@ class MeetingController extends Controller
        
              $data = MeetingModel::whereDate('start', '>=', $request->start)
                        ->whereDate('end',   '<=', $request->end)
+                       ->where('client_id', Auth::user()->client_id)
                        ->get(['id', 'title', 'start', 'end']);
             $data1 = [];
             foreach($data as $row){
@@ -56,9 +62,9 @@ class MeetingController extends Controller
              return response()->json($data1);
         }
         $data['pageTitle'] = 'App Settings';
-        $data['appSettings'] = 'active';
-        $data['appSettingsOpend'] = 'menu-open';
-        $data['appSettingsOpening'] = 'menu-is-opening';
+        $data['calendarSettings'] = 'active';
+        $data['meetingOpening'] = 'menu-is-opening';  
+        $data['meetingOpend'] = 'menu-open';
         return view('admin.meetings.calendar', $data);
     }
  
@@ -81,7 +87,7 @@ class MeetingController extends Controller
                     "settings"=> [
                         
                         "allow_multiple_devices"=> true,
-                        "approval_type"=> 2,
+                        "approval_type"=> 0,
                         "calendar_type"=> 1,
                         "close_registration"=> false,
                         "contact_email"=> Auth::user()->email,
@@ -102,7 +108,7 @@ class MeetingController extends Controller
                         "private_meeting"=> false,
                         "registrants_confirmation_email"=> true,
                         "registrants_email_notification"=> true,
-                        "registration_type"=> 1,
+                        "registration_type"=> 2,
                         "show_share_button"=> true,
                         "use_pmi"=> false,
                         "waiting_room"=> false,
@@ -110,7 +116,7 @@ class MeetingController extends Controller
                         "host_save_video_order"=> true,
                         "internal_meeting"=> false,
                         "participant_focused_meeting"=> false,
-                        "push_change_to_calendar"=> false
+                        "push_change_to_calendar"=> true
                     ],
                     "start_time"=> $request->start,
                     "timezone"=> "America/Los_Angeles",

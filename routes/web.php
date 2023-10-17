@@ -43,10 +43,17 @@ Route::get('meetings/calendar', [MeetingController::class, 'calendar']);
 Route::post('fullcalenderAjax', [MeetingController::class, 'ajax']);
 
 // meeting participents
-Route::get('meeting/{id}/participents', [ParticipentController::class, 'index']);
+Route::get('/meeting/{id}/participents', [App\Http\Controllers\ParticipentController::class, 'index']);
+Route::get('/meeting/{id}/add-participent', [App\Http\Controllers\ParticipentController::class, 'create']);
+Route::post('/meeting/store-participent', [App\Http\Controllers\ParticipentController::class, 'store']);
+Route::get('/meeting/{meetingId}/participent/delete/{id}', [App\Http\Controllers\ParticipentController::class, 'destroy']);
+// Route::get('meeting/{id}/participents', function () {
+//     var_dump('fffffffff'); die;
+// });
 
 //Camera settings
 Route::get('camera-settings', [CameraController::class, 'index']);
+Route::post('camera-setting/add-cams', [CameraController::class, 'addCams'])->name('add-cam');
 
 Route::get('users/approved/{id}', [UserController::class, 'approved'])->name('users.approved');
 Route::get('users/unapprove/{id}', [UserController::class, 'unapprove'])->name('users.unapprove');

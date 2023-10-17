@@ -49,8 +49,8 @@ class HomeController extends Controller
             $data['clients'] = User::whereHas('roles', function ($query) {
                 $query->where('client_id', Auth::user()->client_id)->where('name', 'Client');
             })->count();
-            $data['meetings'] = MeetingModel::count();
-            $data['todayMeetings'] = MeetingModel::whereDate('start', Carbon::today())->count();
+            $data['meetings'] = MeetingModel::where('client_id', Auth::user()->client_id)->count();
+            $data['todayMeetings'] = MeetingModel::whereDate('start', Carbon::today())->where('client_id', Auth::user()->client_id)->count();
         }
         // echo"<pre>";
         // print_r($data['producers']); die;

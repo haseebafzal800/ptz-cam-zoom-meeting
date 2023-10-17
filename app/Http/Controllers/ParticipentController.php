@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BlogRequest;
 use App\Models\BlogsModel;
+use App\Models\MeetingModel;
 use App\Models\ParticipentModel;
 use App\Models\TagsModel;
 use DataTables;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-
+use DB;
 
 class ParticipentController extends Controller
 {
@@ -32,9 +33,10 @@ class ParticipentController extends Controller
      */
     public function index(Request $request)
     {
-        
         if ($request->ajax()) {
-            $data = ParticipentModel::select('id', 'first_name', 'last_name', 'email', 'meeting_id', 'phone', 'zoom_id', 'join_url', 'registrant_id', 'participant_pin_code')->get();
+            $data = DB::table('participents')->select('participents.id', 'first_name', 'last_name', 'email', 'meeting_id', 'title', 'start', 'phone', 'zoom_id', 'join_url', 'registrant_id', 'participant_pin_code')->join('meetings', 'participents.meeting_id', '=', 'meetings.id')->get();
+            
+            // $data = ParticipentModel::select('id', 'first_name', 'last_name', 'email', 'meeting_id', 'phone', 'zoom_id', 'join_url', 'registrant_id', 'participant_pin_code')->get();
             return Datatables::of($data)->addIndexColumn()
                 ->editColumn('name', function ($row) {
                     return $row->first_name.' '.$row->last_name;
@@ -45,65 +47,65 @@ class ParticipentController extends Controller
                     $btn .= ' <a href="'.@url("/meeting/$row->meeting_id/participent".$row->id).'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>';
                     return $btn;
                 })
-                ->addColumn('thumbnail', function($row){
-                    $src = $row->getFirstMediaUrl('images', 'thumb');
-                    $thumbnail = '<img class="img img-fluid" src="'.$src.'">';
-                    return $thumbnail;
-                })
-                ->rawColumns(['thumbnail', 'created_at', 'action'])
+                ->rawColumns(['name','action'])
                 ->make(true);
             }
-        $data['pageTitle'] = 'Blogs';
+        $data['pageTitle'] = 'Meeting participents';
         $data['blogListActive'] = 'active';
         $data['blogOpening'] = 'menu-is-opening';  
         $data['blogOpend'] = 'menu-open';
         return view('admin.participents.index', $data);
     }
     function create(){
-        $data['pageTitle'] = 'Create Blog';
+        $data['pageTitle'] = 'Add Participent';
         $data['blogCreateActive'] = 'active';
         $data['blogOpening'] = 'menu-is-opening';  
         $data['blogOpend'] = 'menu-open';
-        $data['tags'] = TagsModel::get();
-        return view('admin.blogs.form', $data);
+        // $data['tags'] = TagsModel::get();
+        return view('admin.participents.form', $data);
     }
-    public function store(BlogRequest $request)
+    public function store(Request $request)
     {
-        // dd($request->all());
-        $request['slug'] = Str::slug($request->title);
-        $request['user_id'] = auth()->user()->id;
-        $data = [
-            "first_name"=>$request->first_name,
-            "last_name"=>$request->last_name,
-            "email"=>$request->email,
-            "phone"=>$request->phone,
-            "comments"=>$request->comments,
-            "language"=>"en-US",
-            "auto_approve"=>true
-        ];
-        $resp = addRegistrantInToMeeting($data);
-        if($resp){
-            $dbArr = [
-                'first_name'=>$request->first_name,
-                'last_name'=>$request->last_name,
-                'email'=>$request->email,
-                'meeting_id'=>$meeting->id,
-                'phone'=>$request->phone,
-                'zoom_id'=>$resp->id,
-                'join_url'=>$resp->join_url,
-                'registrant_id'=>$resp->registrant_id,
-                'participant_pin_code'=>$resp->participant_pin_code,
+        $meeting = MeetingModel::find($request->meeting_id);
+        if($meeting){
+
+            $data = [
+                "first_name"=>$request->first_name,
+                "last_name"=>$request->last_name,
+                "email"=>$request->email,
+                "phone"=>$request->phone,
+                "language"=>"en-US",
+                "auto_approve"=>true
             ];
-            $post = BlogsModel::create($dbArr);
-            if($post){
-                return redirect()->to("/meeting/$meeting->id/participents");
+            $resp = addRegistrantInToMeeting($meeting->zoom_meeting_id, $data);
+            // var_dump($resp); die;
+            if($resp){
+                $dbArr = [
+                    'first_name'=>$request->first_name,
+                    'last_name'=>$request->last_name,
+                    'email'=>$request->email,
+                    'meeting_id'=>$meeting->id,
+                    'phone'=>$request->phone,
+                    'zoom_id'=>$resp->id,
+                    'join_url'=>$resp->join_url,
+                    'registrant_id'=>$resp->registrant_id,
+                    'participant_pin_code'=>$resp->participant_pin_code ?? '',
+                ];
+                $post = ParticipentModel::create($dbArr);
+                if($post){
+                    return redirect()->to("/meeting/$meeting->id/participents");
+                }else{
+                    session()->flash('error', '<div class="alert alert-danger">Successfully saved the data!</div>');
+                    return back();
+                }
             }else{
                 session()->flash('error', '<div class="alert alert-danger">Successfully saved the data!</div>');
                 return back();
             }
+        }else{
+            session()->flash('error', '<div class="alert alert-danger">Successfully saved the data!</div>');
+            return back();
         }
-        
-
     }
     public function show(string $id): View
     {
@@ -149,13 +151,17 @@ class ParticipentController extends Controller
     }
 
     
-    public function destroy($id)
+    public function destroy($meetingId, $id)
     {
-        // dd('ddddd'); 
-        if(BlogsModel::find($id)->delete()){
-            return 'ok';
-        }else{
-            return 'notok';
+        $user = ParticipentModel::find($id);
+        if($user){
+            $del = participentDelete($user->zoom_id, $user->registrant_id);
+            if($user->delete()){
+                return 'ok';
+            }else{
+                return 'notok';
+            }
+
         }
     }
 }

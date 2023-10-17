@@ -35,7 +35,7 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-            <li class="nav-item {{$dashboardOpening ?? ''}}  {{$dashboardOpend ?? ''}}">
+          <li class="nav-item {{$dashboardOpening ?? ''}}  {{$dashboardOpend ?? ''}}">
             <a href="{{@url('/admin/home')}}" class="nav-link {{$dashboardActive??''}}">
               <i class="far fa-circle nav-icon"></i>
               <p>Dashboard</p>
@@ -164,8 +164,8 @@
           @endcan
 
           @if (Gate::check('meeting-list') || Gate::check('meeting-create'))
-          <li class="nav-item {{$blogOpening??''}} {{$blogOpend??''}}">
-            <a href="#" class="nav-link">
+          <li class="nav-item {{$meetingOpening??''}} {{$meetingOpend??''}}">
+            <a href="#" class="nav-link ">
               <i class="nav-icon fas fa-copy"></i>
               <p>
                 Meetings
@@ -176,13 +176,13 @@
             <ul class="nav nav-treeview">
             @can('user-list')
             <li class="nav-item">
-              <a href="{{@url('/meetings/calendar')}}" class="nav-link {{$blogListActive??''}}">
+              <a href="{{@url('/meetings/calendar')}}" class="nav-link {{$calendarSettings??''}}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Calendar</p>
                 </a>
               </li>
             <li class="nav-item">
-              <a href="{{@url('/meetings')}}" class="nav-link {{$blogListActive??''}}">
+              <a href="{{@url('/meetings')}}" class="nav-link {{$meetingListActive??''}}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Meeting</p>
                 </a>

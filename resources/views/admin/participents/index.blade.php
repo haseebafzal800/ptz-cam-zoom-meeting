@@ -6,6 +6,9 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
+            <a href="{{@url('/meeting/'.request()->segment(2).'/add-participent')}}" class="btn btn-primary">Add New</a>
+          </div>
+          <div class="col-12">
           @if(session()->has('msg'))
                 <p class="alert text-center {{ session()->get('alert-class') }}">{{ session()->get('msg') }}</p>
               @endif
@@ -20,14 +23,11 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Title</th>
-                        <!-- <th>Description</th> -->
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Meeting</th>
                         <th>Start at</th>
-                        <th>Host Email</th>
-                        <!-- <th width="10%">Start URL</th> -->
-                        <th>Join URL</th>
-                        <th>Password</th>
-                        <th>Time Zone</th>
                         <th width="100px">Action</th>
                     </tr>
                 </thead>
@@ -35,16 +35,13 @@
                  
                   <tfoot>
                   <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <!-- <th>Description</th> -->
-                    <th>Start at</th>
-                    <th>Host Email</th>
-                    <!-- <th>Start URL</th> -->
-                    <th>Join URL</th>
-                    <th>Password</th>
-                    <th>Time Zone</th>
-                    <th width="100px">Action</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Meeting</th>
+                        <th>Start at</th>
+                        <th width="100px">Action</th>
                     </tr>
                   </tfoot>
                 </table>
@@ -75,14 +72,11 @@
             ajax: '{{ @url("meeting/request()->segment(2)/participents") }}',
             columns: [
                 {data: 'id', name: 'id'},
+                {data: 'name', name: 'name'},
+                {data: 'email', name: 'email'},
+                {data: 'phone', name: 'phone'},
                 {data: 'title', name: 'title'},
-                // {data: 'description', name: 'description'},
                 {data: 'start', name: 'start'},
-                {data: 'host_email', name: 'host_email'},
-                // {data: 'meeting_start_url', name: 'meeting_start_url'},
-                {data: 'meeting_join_url', name: 'meeting_join_url'},
-                {data: 'meeting_password', name: 'meeting_password'},
-                {data: 'meeting_timezone', name: 'meeting_timezone'},
                 {data: 'action', name: 'action', orderable: false, searchable: true},
             ]
         });

@@ -17,8 +17,8 @@ class AppsettingsConteroller extends Controller
         $data['item'] = getAppSettings();
         $data['pageTitle'] = 'App Settings';
         $data['appSettings'] = 'active';
-        $data['appSettingsOpend'] = 'menu-open';
-        $data['appSettingsOpening'] = 'menu-is-opening';
+        // $data['appSettingsOpend'] = 'menu-open';
+        // $data['appSettingsOpening'] = 'menu-is-opening';
         return view('admin.appsettings.index', $data);
     }
     public function update(Request $request){
