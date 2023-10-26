@@ -24,6 +24,7 @@ class ParticipentController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('permission:meeting-list', ['only' => ['index','create','createbatch','store','batchstore','destroy']]);
     }
 
     /**
@@ -44,7 +45,7 @@ class ParticipentController extends Controller
                 ->addColumn('action', function($row){
                     $url = "/meeting/$row->meeting_id/participent/delete/".$row->id;
                     $btn = '<a href="javascript:void(0)" onclick="DeleteMe(this, '."'".$url."'".')" class="btn btn-danger btn-xs btn-delete"><i class="fa fa-trash"></i></a>';
-                    $btn .= ' <a href="'.@url("/meeting/$row->meeting_id/participent".$row->id).'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>';
+                    // $btn .= ' <a href="'.@url("/meeting/$row->meeting_id/participent".$row->id).'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>';
                     return $btn;
                 })
                 ->rawColumns(['name','action'])
@@ -64,6 +65,70 @@ class ParticipentController extends Controller
         // $data['tags'] = TagsModel::get();
         return view('admin.participents.form', $data);
     }
+    function createbatch(){
+        $data['pageTitle'] = 'Add Batch Participent';
+        $data['blogCreateActive'] = 'active';
+        $data['blogOpening'] = 'menu-is-opening';  
+        $data['blogOpend'] = 'menu-open';
+        // $data['tags'] = TagsModel::get();
+        return view('admin.participents.batchform', $data);
+    }
+    public function batchstore(Request $request)
+    {
+        $meeting = MeetingModel::find($request->meeting_id);
+        if($meeting){
+            $first_name_arr = explode(',',$request->first_name);
+            // $last_name_arr = explode(',',$request->last_name);
+            $email_arr = explode(',',$request->email);
+            $totalParticipents = count($email_arr);
+            $participentsArray = array();
+            for($pz=0; $pz<$totalParticipents; $pz++){
+                $singleParticipent = [];
+                $singleParticipent = ['first_name'=>trim($first_name_arr[$pz]??''), 'last_name'=>'', 'email'=>trim($email_arr[$pz])];
+                $participentsArray[] = $singleParticipent;
+            }
+            $data = [
+                "auto_approve"=> true,
+                "registrants_confirmation_email"=> true,
+                "registrants"=>$participentsArray
+            ];
+            $resp = addRegistrantInToMeeting($meeting->zoom_meeting_id, $data);
+            // echo"<pre>";
+            // print_r($resp); die;
+            if($resp){
+                $registrants = $resp->registrants;
+                $user = array();
+                foreach($registrants as $req){
+                    $dbArr = [
+                        'first_name'=>$req->first_name??'',
+                        'last_name'=>$req->last_name??'',
+                        'email'=>$req->email,
+                        'meeting_id'=>$meeting->id,
+                        'phone'=>$req->phone??'',
+                        'zoom_id'=>$req->id??'',
+                        'join_url'=>$req->join_url,
+                        'registrant_id'=>$req->registrant_id,
+                        'participant_pin_code'=>$req->participant_pin_code ?? '',
+                    ];
+                    $user[] = $dbArr;
+                }
+                $post = ParticipentModel::insert($user);
+                
+                if($post){
+                    return redirect()->to("/meeting/$meeting->id/participents");
+                }else{
+                    session()->flash('error', '<div class="alert alert-danger">Successfully saved the data!</div>');
+                    return back();
+                }
+            }else{
+                session()->flash('error', '<div class="alert alert-danger">Successfully saved the data!</div>');
+                return back();
+            }
+        }else{
+            session()->flash('error', '<div class="alert alert-danger">Successfully saved the data!</div>');
+            return back();
+        }
+    }
     public function store(Request $request)
     {
         $meeting = MeetingModel::find($request->meeting_id);
@@ -77,7 +142,7 @@ class ParticipentController extends Controller
                 "language"=>"en-US",
                 "auto_approve"=>true
             ];
-            $resp = addRegistrantInToMeeting($meeting->zoom_meeting_id, $data);
+            $resp = addSingleRegistrantInToMeeting($meeting->zoom_meeting_id, $data);
             // var_dump($resp); die;
             if($resp){
                 $dbArr = [
@@ -107,50 +172,6 @@ class ParticipentController extends Controller
             return back();
         }
     }
-    public function show(string $id): View
-    {
-        return view('user.profile', [
-            'user' => User::findOrFail($id)
-        ]);
-    }
-    public function edit($id)
-    {
-        $data['pageTitle'] = 'Edit Blog';
-        $data['blogListActive'] = 'active';
-        $data['blogOpening'] = 'menu-is-opening';  
-        $data['blogOpend'] = 'menu-open';
-        $data['item'] = BlogsModel::find($id);
-        $data['tags'] = TagsModel::get();
-        
-        return view('admin.blogs.edit', $data);
-    }
-
-    
-    public function update(BlogRequest $request)
-    {
-        $post = BlogsModel::find($request->id);
-        $request['slug'] = Str::slug($request->title);
-        $request['user_id'] = auth()->user()->id;
-        // dd($request->all());
-        // var_dump($request->all()); die;
-        $post->update($request->all());
-        if($post){
-            if($request->hasFile('image') && $request->file('image')->isValid()){
-                $post->clearMediaCollection('images');
-                $post->addMediaFromRequest('image')->toMediaCollection('images');
-            }
-            session()->flash('msg', 'Successfully saved the data!');
-            session()->flash('alert-class', 'alert-success');
-            
-            return redirect()->route('blogs');
-        }else{
-            session()->flash('msg', 'Successfully saved the data!');
-            session()->flash('alert-class', 'alert-danger');
-            return back();
-        }
-    }
-
-    
     public function destroy($meetingId, $id)
     {
         $user = ParticipentModel::find($id);

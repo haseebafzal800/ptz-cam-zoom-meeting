@@ -1,3 +1,14 @@
+@font-face {
+  font-family: 'Kodchasan-ExtraLight';
+  src: url('../../admin/font_nindeo/Kodchasan-ExtraLight.ttf') format('woff');
+}
+
+*{
+  font-family: 'Kodchasan-ExtraLight' !important;
+}
+input[type="datetime-local"]::-webkit-calendar-picker-indicator{
+  font-family: 'Kodchasan-ExtraLight' !important;
+}
 .dropzone {
     background: white;
     border-radius: 5px;

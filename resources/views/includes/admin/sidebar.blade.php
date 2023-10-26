@@ -2,8 +2,9 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="{{@url('/admin/home')}}" class="brand-link">
-      <img src="{{@url('/admin/dist/img/AdminLTELogo.png')}}" alt="{{ config('app.name') }}" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">{{ config('app.name') }}</span>
+      <img src="{{ $globalData }}" alt="{{ config('app.name') }}" class="brand-image elevation-3" style="opacity: .8">
+      <!-- <img src="{{@url('/admin/dist/img/AdminLTELogo.png')}}" alt="{{ config('app.name') }}" class="brand-image img-circle elevation-3" style="opacity: .8"> -->
+      <span class="brand-text font-weight-light invisible">{{ config('app.name') }}</span>
     </a>
 
     <!-- Sidebar -->
@@ -67,12 +68,12 @@
               </li>
               @endcan
               @can('role-create') 
-              <li class="nav-item">
+              <?php /*<li class="nav-item">
                 <a href="{{@url('/roles/create')}}" class="nav-link {{$roleCreateActive??''}}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Create New</p>
                 </a>
-              </li>
+              </li> */ ?>
               @endcan
               
             </ul>
@@ -137,6 +138,37 @@
             </ul>
           </li>
           @endif
+          @if (Gate::check('notification-list'))
+          <li class="nav-item {{$notificationsOpening??''}} {{$notificationsOpend??''}}">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Notifications
+                <i class="fas fa-angle-left right"></i>
+                <!-- <span class="badge badge-info right">6</span> -->
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+            @can('notification-list')
+            <li class="nav-item">
+              <a href="{{@url('/notifications')}}" class="nav-link {{$notificationsListActive??''}}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>List</p>
+                </a>
+              </li>
+              @endcan
+              <!-- @can('user-create')
+              <li class="nav-item">
+                <a href="{{@url('/users/create')}}" class="nav-link {{$userCreateActive??''}}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Create New</p>
+                </a>
+              </li>
+              @endcan -->
+              
+            </ul>
+          </li>
+          @endif
           @can('app-settings')
           <li class="nav-item {{$appSettingsOpening??''}} {{$appSettingsOpend??''}}">
             <a href="{{@url('/app-settings')}}" class="nav-link {{$appSettings??''}}">
@@ -174,34 +206,33 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-            @can('user-list')
-            <li class="nav-item">
-              <a href="{{@url('/meetings/calendar')}}" class="nav-link {{$calendarSettings??''}}">
+            @can('meeting-list')
+              <li class="nav-item">
+                <a href="{{@url('/meetings')}}" class="nav-link {{$meetingListActive??''}}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>List</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{@url('/meetings/calendar')}}" class="nav-link {{$calendarSettings??''}}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Calendar</p>
                 </a>
               </li>
-            <li class="nav-item">
-              <a href="{{@url('/meetings')}}" class="nav-link {{$meetingListActive??''}}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Meeting</p>
-                </a>
-              </li>
-              @endcan
-              @can('user-create')
-              <!-- <li class="nav-item">
-                <a href="{{@url('/users/create')}}" class="nav-link {{$blogCreateActive??''}}">
+            @endcan
+            @can('meeting-create')
+              <li class="nav-item">
+                <a href="{{@url('/meetings/create')}}" class="nav-link {{$meetingAddActive??''}}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Create New</p>
                 </a>
-              </li> -->
-              @endcan
-              
+              </li>
+            @endcan
             </ul>
           </li>
           @endif
 
-          @if (Gate::check('camera-settings') || Gate::check('camera-settings'))
+          <?php /* @if (Gate::check('camera-settings') || Gate::check('camera-settings'))
           <li class="nav-item {{$cameraSettingsOpening??''}} {{$cameraSettingsOpend??''}}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
@@ -231,7 +262,7 @@
               
             </ul>
           </li>
-          @endif
+          @endif */ ?>
           <li class="nav-item">
             <a class="nav-link" href="JAVASCRIPT://" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="far fa-circle  nav-icon"></i>

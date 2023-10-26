@@ -85,6 +85,12 @@
       </div>
     </div>
   </div>
+  <?php $selectable = false; ?>
+  <?php $editable = false; ?>
+  @can("meeting-create")
+  <?php $selectable = true; ?>
+  <?php $editable = true; ?>
+  @endcan
 <script>
 $(document).ready(function () {
 $('body').addClass('sidebar-collapse');
@@ -141,10 +147,10 @@ $.ajaxSetup({
 });
 
 var calendar = $('#calendar').fullCalendar({
-                    editable: true,
+                    editable: '<?=$editable?>',
+                    eventStartEditable: false,
                     events: SITEURL + "/meetings/calendar",
                     displayEventTime: true,
-                    editable: true,
                     slotDuration: '01:00:00',
                     timeFormat: 'H:mm',
                     allDaySlot : false,
@@ -164,7 +170,7 @@ var calendar = $('#calendar').fullCalendar({
                                 event.allDay = false;
                         }
                     },
-                    selectable: true,
+                    selectable: '<?=$selectable?>',
                     allDayDefault: false,
 
                     selectHelper: true,
@@ -230,6 +236,7 @@ var calendar = $('#calendar').fullCalendar({
                         });
                     },
                     eventClick: function (event) {
+                      if('<?=$editable?>'){
                         var deleteMsg = confirm("Do you really want to delete?");
                         if (deleteMsg) {
                             $.ajax({
@@ -245,6 +252,9 @@ var calendar = $('#calendar').fullCalendar({
                                 }
                             });
                         }
+                      }else{
+                        return false;
+                      }
                     }
  
                 });

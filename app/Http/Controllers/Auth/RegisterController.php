@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\NotificationsModel;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -64,10 +65,19 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+        if($user){
+            NotificationsModel::create([
+                'title' => 'New Client Registration',
+                'description' => 'A new client <b>'.$data['name'].'</b> registered, needs admin approval. Click <a target="_blank" href="'.@url('users/'.$user->id).'">here</a> to view and take action.',
+                'is_delivered' => '0',
+                'is_seen' => '0'
+            ]);
+            return $user;
+        }
     }
 }

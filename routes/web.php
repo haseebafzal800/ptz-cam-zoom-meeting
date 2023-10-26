@@ -4,6 +4,7 @@ use App\Http\Controllers\ParticipentController;
 use App\Http\Controllers\AppsettingsConteroller;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\CameraController;
+use App\Http\Controllers\NotificationsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -40,12 +41,17 @@ Route::post('/app-settings/update', [AppsettingsConteroller::class, 'update'])->
 // full calander
 Route::get('meetings', [MeetingController::class, 'index'])->name('meetings');
 Route::get('meetings/calendar', [MeetingController::class, 'calendar']);
+Route::get('meetings/create', [MeetingController::class, 'create'])->name('create-meeting');
+Route::get('meeting/edit/{id}', [MeetingController::class, 'edit'])->name('edit-meeting');
 Route::post('fullcalenderAjax', [MeetingController::class, 'ajax']);
+Route::get('/meeting/getLiveStreamInfo/{id}', [App\Http\Controllers\MeetingController::class, 'getLiveStreamInfo']);
 
 // meeting participents
 Route::get('/meeting/{id}/participents', [App\Http\Controllers\ParticipentController::class, 'index']);
 Route::get('/meeting/{id}/add-participent', [App\Http\Controllers\ParticipentController::class, 'create']);
+Route::get('/meeting/{id}/add-batch-participent', [App\Http\Controllers\ParticipentController::class, 'createbatch']);
 Route::post('/meeting/store-participent', [App\Http\Controllers\ParticipentController::class, 'store']);
+Route::post('/meeting/store-batch-participent', [App\Http\Controllers\ParticipentController::class, 'batchstore']);
 Route::get('/meeting/{meetingId}/participent/delete/{id}', [App\Http\Controllers\ParticipentController::class, 'destroy']);
 // Route::get('meeting/{id}/participents', function () {
 //     var_dump('fffffffff'); die;
@@ -53,11 +59,15 @@ Route::get('/meeting/{meetingId}/participent/delete/{id}', [App\Http\Controllers
 
 //Camera settings
 Route::get('camera-settings', [CameraController::class, 'index']);
+Route::get('camera-settings/{id?}', [CameraController::class, 'index']);
 Route::post('camera-setting/add-cams', [CameraController::class, 'addCams'])->name('add-cam');
-
+//Users
 Route::get('users/approved/{id}', [UserController::class, 'approved'])->name('users.approved');
 Route::get('users/unapprove/{id}', [UserController::class, 'unapprove'])->name('users.unapprove');
+//Notifications
 
+Route::get('/notifications', [NotificationsController::class, 'index'])->name('notifications');
+Route::get('/notification/delete/{id}', [NotificationsController::class, 'destroy'])->name('notification-delete');
 // Zoom App Settings
 Route::get('/zoom-settings', [AppsettingsConteroller::class, 'zoomSettings'])->name('zoom-settings');
 Route::post('/zoom-settings/update', [AppsettingsConteroller::class, 'zoomSettingsUpdate'])->name('zoom-settings-update');

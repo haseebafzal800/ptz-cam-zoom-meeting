@@ -6,7 +6,8 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-            <a href="{{@url('/meeting/'.request()->segment(2).'/add-participent')}}" class="btn btn-primary">Add New</a>
+            <a href="{{@url('/meeting/'.request()->segment(2).'/add-participent')}}" class="btn btn-primary  btn-sm">Add New</a>
+            <a href="{{@url('/meeting/'.request()->segment(2).'/add-batch-participent')}}" class="btn btn-primary btn-sm">Add in bulk</a>
           </div>
           <div class="col-12">
           @if(session()->has('msg'))
@@ -18,7 +19,7 @@
               </div> -->
               <!-- /.card-header -->
               
-              <div class="card-body">
+              <div class="card-body table-responsive">
                 <table id="example1" class="table table-bordered table-striped">
                 <thead>
                     <tr>
@@ -27,6 +28,7 @@
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Meeting</th>
+                        <th>Join URL</th>
                         <th>Start at</th>
                         <th width="100px">Action</th>
                     </tr>
@@ -40,6 +42,7 @@
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Meeting</th>
+                        <th>Join URL</th>
                         <th>Start at</th>
                         <th width="100px">Action</th>
                     </tr>
@@ -76,6 +79,7 @@
                 {data: 'email', name: 'email'},
                 {data: 'phone', name: 'phone'},
                 {data: 'title', name: 'title'},
+                {data: 'join_url', name: 'join_url'},
                 {data: 'start', name: 'start'},
                 {data: 'action', name: 'action', orderable: false, searchable: true},
             ]

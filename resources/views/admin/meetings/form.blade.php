@@ -14,87 +14,63 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form id="quickForm" method="post" action="{{@url('/admin/blogs/save')}}" enctype="multipart/form-data">
+              <form id="quickForm" method="post" action="#" enctype="multipart/form-data">
                 <div class="card-body">
                 @csrf
-                  <div class="form-group">
-                    <label for="title">Title</label>
-                    <input type="text" name="title" value="{{ old('title') }}" class="form-control" id="title" placeholder="Enter Title">
-                    @error('title')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                  </div>
+                  <!-- <div class="form-group col-sm-4">
+                    <label for="startDate">Meeting Date</label>
+                    <input type="datetime-local" name="startDate" value="{{ old('startDate') }}" class="form-control" id="startDate" placeholder="Meeting Date">
+                    <!-- <input type="datetime-local"> ->
 
-                  <div class="form-group">
-                    <label for="title">Title</label>
-                    <select name="tag_id" class="form-control" id="tag_id">
-                      <option value="" selected disabled>Select Tag</option>
-                      @foreach($tags as $tag)
-                        <option value="{{$tag->id}}">{{$tag->tag}}</option>
-                      @endforeach
-                    </select>
-                    @error('tag_id')
+                    @error('startDate')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
-                  </div>
-                  <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea name="description" class="form-control" id="description" placeholder="Description">{{ old('description') }}</textarea>
-                    @error('description')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                  </div>
-                  <div class="form-group">
-                    <label for="summernote">Post</label>
-                    <textarea name="post" id="summernote">{{ old('post') }}</textarea>
-                    @error('post')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                  </div>
-                  <div class="form-group">
-                    <div class="custom-control custom-switch">
-                      <input type="checkbox" {{ old('is_featured')?'checked':'' }} name="is_featured" class="custom-control-input" id="customSwitch1">
-                      <label class="custom-control-label" for="customSwitch1">Is Featured</label>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="mataTitle">Mata Title</label>
-                    <input type="text" name="mataTitle"  value="{{ old('mataTitle') }}" class="form-control" id="mataTitle" placeholder="Enter Mata Title">
-                    @error('mataTitle')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                  </div>
-
-                  <div class="form-group">
-                    <label for="mataDescription">Mata Description</label>
-                    <input type="text" name="mataDescription" value="{{ old('mataDescription') }}" class="form-control" id="mataDescription" placeholder="Enter Mata Description">
-                    @error('mataDescription')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                  </div>
-
-                  <div class="form-group">
-                    <label for="mataTags">Mata Tags</label>
-                    <input type="text" name="mataTags" value="{{ old('mataTags') }}" class="form-control" id="mataTags" placeholder="Enter Mata Tags">
-                    @error('mataTags')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                  </div>
-
-                  <div class="form-group custom-img-hanlder">
-                    <label class="img-hldr">
-                          <div class="row-custom">
-                            <img id="image-container1" class="img img-fluid" />
-                            <input class="invisible" type="file" accept="image/*" name="image" id="image-upload" /><br>
-                          </div>
-                          <button id="cancel-btn" class="btn btn-xs btn-danger" ><i class="fa fa-trash"></i></button>
-                          @error('image')
+                  </div> -->
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="start">Start At</label>
+                        <!-- <input type="date" min="{{date('Y-m-d')}}" name="start" value="{{ old('start') }}" class="form-control" id="start" placeholder="Enter Mata Tags"> -->
+                        <input type="datetime-local" min="{{date('Y-m-d H:i')}}" required name="start" value="{{ old('start') }}" class="form-control" id="start" placeholder="Enter Mata Tags">
+                        @error('start')
                             <div class="text-danger">{{ $message }}</div>
-                          @enderror
-                      </label>
-                      <br>
+                        @enderror
+                      </div>
                     </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="end">End At</label>
+                        <input type="datetime-local" name="end" min="{{date('Y-m-d H:i')}}" required value="{{ old('end') }}" class="form-control" id="end" placeholder="Enter Mata Tags">
+                        @error('end')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                      </div>
+                    </div>
+                  </div>
                   
+                  <div class="form-group">
+                    <label for="meetingTitle">Meeting Topic</label>
+                    <input required type="text" value="{{ old('meetingTitle') }}" name="meetingTitle" class="form-control" id="meetingTitle" placeholder="Meeting Title/Topic">
+                    @error('meetingTitle')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                  </div>
+
+                  <div class="form-group">
+                    <label for="meetingDescription">Description</label>
+                    <input  required type="text" value="{{ old('meetingDescription') }}" name="meetingDescription" class="form-control" id="meetingDescription" placeholder="Meeting Description/Agenda">
+                    @error('meetingDescription')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="meetingPassword">Meeting Password</label>
+                    <input required type="text" value="{{ old('meetingPassword') }}" name="meetingPassword" class="form-control" id="meetingPassword" placeholder="Meeting Password">
+                    @error('meetingPassword')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                  </div>
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
@@ -123,11 +99,53 @@
   <script>
 $(function () {
   $('#summernote').summernote({height: 300})
+  $.ajaxSetup({
+    headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
 
   $.validator.setDefaults({
     submitHandler: function () {
-      $('#quickForm').submit();    
-      // alert( "Form successful submitted!" );
+      var SITEURL = "{{ url('/') }}";
+      // e.preventDefault()
+      var title = $('#meetingTitle').val();
+      var description = $('#meetingDescription').val();
+      var start = $('#start').val();
+      var end = $('#end').val();
+      var password = $('#meetingPassword').val();
+      // console.log(password); return;
+      $.ajax({
+          url: SITEURL + "/fullcalenderAjax",
+          data: {
+              title: title,
+              description: description,
+              start: start,
+              end: end,
+              password: password,
+              type: 'add'
+          },
+          type: "POST",
+          success: function (data) {
+              $('#meetingTitle').val('');
+              $('#meetingDescription').val('');
+              $('#start').val('');
+              $('#end').val('');
+              $('#meetingPassword').val('')
+              // displayMessage("Event Created Successfully");
+              // $('#myModal').modal('hide');
+              displayMessage("Meeting Created Successfully")
+              setTimeout(function(){
+                window.location.href=SITEURL+'/meetings'
+              }, 5000);
+
+          },
+          error: function(response) { 
+            displayError(response);
+            return false;
+          } 
+      });
+      // $('#quickForm').submit();    
     }
   });
   $('#quickForm').validate({
@@ -182,34 +200,13 @@ $(function () {
   });
 });
 
+function displayMessage(message) {
+    toastr.success(message, 'Event');
+} 
 
-$(function(){
-    $("#image-upload").on("change",function(){
-          /* Current this object refer to input element */ 			
-          var $input = $(this);
-          var reader = new FileReader();
-          reader.onload = function(){
-            $("#image-container1").attr("src", reader.result);
-          }
-          reader.readAsDataURL($input[0].files[0]);
-        }
-                             );
-        /* This function will call when upload button clicked */ 		
-        $("#upload-btn").on("click",function(){
-          /* file validation logic goes here if required */      
-          /* image uploading logic goes here */
-          alert("Upload logic need to be write here...");
-        }
-                           );
-        /* This function will call when cancel button clicked */ 		
-        $("#cancel-btn").on("click",function(){
-          /* Reset input element */
-          $('#image-upload').val("");
-          /* Clear image preview container */
-          $('#image-container').attr("src","");
-        }
-                           );
-})
+function displayError(message) {
+    toastr.error(message, 'Error!');
+} 
 </script>
   
 @stop

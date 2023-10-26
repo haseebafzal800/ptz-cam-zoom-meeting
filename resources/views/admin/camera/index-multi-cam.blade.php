@@ -198,6 +198,12 @@
                                         <input type="range" class="form-control-range" id="formControlRange">
                                     </div>
                                 </div>
+                                <div class="col-10 col-lg-8 pt-3">
+                                    <div class="form-group text-left">
+                                        
+                                        <a class="btn btn-sm btn-warning" data-url="{{ @url('meeting/getLiveStreamInfo/'.request()->segment(2)) }}" id="formControlRangeLiveStream">Live Streaming</a>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row d-flex justify-content-center flex-wrap py-4">
                                 <div class="col-6 col-md-4 col-lg-2">
@@ -356,7 +362,14 @@
 
 $(document).ready(function () {
     $('body').addClass('sidebar-collapse');
-
+    //live streaming info
+    $('#formControlRangeLiveStream').click(function(){
+        var url = $(this).data('url');
+        $.get(url, {}, function(response){
+            resp = response;
+            console.log(resp);
+        });
+    }) // live streaimg info
     $('.camera-changing-button').click(function(){
         $('.camera-changing-button').removeClass('active');
         $(this).addClass('active');

@@ -159,14 +159,92 @@ if (!function_exists('userLvlAccess')) {
             
         }
     }
-    
+
+    if (!function_exists('getLiveStreamInfo')) {
+        function getLiveStreamInfo($meeting_id){
+            $accessToken = getZoomAccessToken();
+            if($accessToken){
+                $url = "https://api.zoom.us/v2/meetings/82940927738/livestream";
+                // $url = "https://api.zoom.us/v2/meetings/$meeting_id/livestream";
+
+                // Set up the headers with the Authorization token
+                $headers = array(
+                    "Authorization: Bearer {$accessToken}"
+                );
+
+                // Initialize cURL session
+                $ch = curl_init($url);
+
+                // Set cURL options
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+                // Execute cURL session and get the response
+                $response = curl_exec($ch);
+                $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                
+                curl_close($ch);
+                // Check the response status code and handle any errors
+                if ($response_code == 200) {
+                    // echo "Meeting deleted successfully.";
+                    return $response;
+                } else {
+                    return false;
+                    // echo "Error deleting meeting. Status code: {$response_code}\n";
+                    // echo $response;
+                }
+
+                // Close cURL session
+            }
+            
+        }
+    }
+    if (!function_exists('updateMeeting')) {
+        function updateMeeting($meeting_id, $data) {
+            $accessToken = getZoomAccessToken();
+            $user_id = Auth::user()->zoom_user_id;
+            if($accessToken){
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                // CURLOPT_URL => "https://api.zoom.us/v2/users/$user_id/meetings",
+                CURLOPT_URL => "https://api.zoom.us/v2/meetings/$meeting_id",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "PATCH",
+                CURLOPT_POSTFIELDS =>json_encode($data),
+                CURLOPT_HTTPHEADER => array(
+                    "Authorization: Bearer  $accessToken",
+                    "Content-Type: application/json"
+                ),
+                ));
+
+                $response = curl_exec($curl);
+                $response_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+                curl_close($curl);
+                if ($response_code == 204) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }else{
+                return false;
+            }
+            
+        }
+    }
     function meetingDelete($meeting_id, $json = '')
     {
         $accessToken = getZoomAccessToken();
         if($accessToken){
 
             // Replace with your Zoom API access token and meeting ID
-            $access_token = getZoomAccessToken();
+            $access_token = $accessToken;
 
             // Construct the URL for the DELETE request
             $url = "https://api.zoom.us/v2/meetings/{$meeting_id}";
@@ -206,7 +284,39 @@ if (!function_exists('userLvlAccess')) {
         }
     }
     function addRegistrantInToMeeting($meetingId, $data){
+        // $url = "https://api.zoom.us/v2/meetings/$meetingId/registrants";
+        $url = "https://api.zoom.us/v2/meetings/$meetingId/batch_registrants";
+        $accessToken = getZoomAccessToken();
+        if($accessToken){
+            // $user_id = $user->id;
+            $headers = array(
+                "Authorization: Bearer $accessToken",
+                "Content-Type: application/json",
+            );
+            
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+            $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            // return $response;
+            if ($http_status == 201) {
+                return json_decode($response);
+            }else{
+                return false;
+            }
+
+        }else{
+            return false;
+        }
+    }
+    function addSingleRegistrantInToMeeting($meetingId, $data){
         $url = "https://api.zoom.us/v2/meetings/$meetingId/registrants";
+        // $url = "https://api.zoom.us/v2/meetings/$meetingId/batch_registrants";
         $accessToken = getZoomAccessToken();
         if($accessToken){
             // $user_id = $user->id;

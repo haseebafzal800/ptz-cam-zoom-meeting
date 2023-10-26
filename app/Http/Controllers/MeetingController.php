@@ -7,18 +7,28 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Gate;
+
 
 // use Yajra\DataTables\DataTables;
 class MeetingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:meeting-list|meeting-create|meeting-edit|meeting-delete', ['only' => ['index','calendar']]);
+        $this->middleware('permission:meeting-create', ['only' => ['create','ajax']]);
+        $this->middleware('permission:meeting-edit', ['only' => ['edit','ajax']]);
+        $this->middleware('permission:meeting-delete', ['only' => ['ajax']]);
+    }
     public function index(Request $request)
     {
         
         if ($request->ajax()) {
             if(Auth::user()->hasRole('Admin')){
-                $data = MeetingModel::select('id','title','description','start', 'host_email', 'meeting_start_url', 'meeting_join_url', 'meeting_password', 'meeting_timezone')->get();
+                $data = MeetingModel::select('id','title','description','start', 'host_email', 'meeting_start_url', 'zoom_meeting_id', 'meeting_join_url', 'meeting_password', 'meeting_timezone')->get();
             }else{
-                $data = MeetingModel::select('id','title','description','start', 'host_email', 'meeting_start_url', 'meeting_join_url', 'meeting_password', 'meeting_timezone')->where('client_id', Auth::user()->client_id)->get();
+                $data = MeetingModel::select('id','title','description','start', 'host_email', 'meeting_start_url', 'zoom_meeting_id', 'meeting_join_url', 'meeting_password', 'meeting_timezone')->where('client_id', Auth::user()->client_id)->get();
             }
 
             return Datatables::of($data)->addIndexColumn()
@@ -26,10 +36,15 @@ class MeetingController extends Controller
                     return Carbon::parse($row->start)->format('M d, Y H:i:s');
                 })
                 ->addColumn('action', function($row){
-                    // $url = "/admin/meeting/delete/".$row->id;
-                    // $btn = '<a href="javascript:void(0)" onclick="DeleteMe(this, '."'".$url."'".')" class="btn btn-danger btn-xs btn-delete"><i class="fa fa-trash"></i></a>';
-                    // $btn .= ' <a href="'.@url('/admin/blog/edit/'.$row->id).'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>';
-                    $btn = ' <a href="'.@url("/meeting/$row->id/participents/").'" class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></a>';
+                    $url = "/fullcalenderAjax";
+                    $btn='';
+                    if (Gate::allows('meeting-edit')) {
+                    $btn .= '<a href="'.@url("/meeting/$row->id/participents/").'" class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></a>';
+                    $btn .= ' <a href="'.@url('/meeting/edit/'.$row->id).'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>';
+                    $btn .= ' <a href="javascript:void(0)" id="'.$row->id.'" onclick="DeleteMeeting(this, '."'".$url."'".')" class="btn btn-danger btn-xs btn-delete"><i class="fa fa-trash"></i></a>';
+                    }if (Gate::allows('camera-settings')) {
+                        $btn .= ' <a id="'.$row->id.'" href="'.@url("/camera-settings/$row->zoom_meeting_id").'" class="btn btn-warning btn-xs btn-delete"><i class="fa fa-camera" aria-hidden="true"></i></a>';
+                    }
                     return $btn;
                 })
                 ->rawColumns(['created_at', 'action'])
@@ -40,6 +55,10 @@ class MeetingController extends Controller
         $data['meetingOpening'] = 'menu-is-opening';  
         $data['meetingOpend'] = 'menu-open';
         return view('admin.meetings.index', $data);
+    }
+    public function getLiveStreamInfo($id){
+        $info = getLiveStreamInfo($id);
+        echo $info;
     }
     public function calendar(Request $request)
     {
@@ -97,12 +116,6 @@ class MeetingController extends Controller
                         "focus_mode"=> true,
                         "join_before_host"=> false,
                         "meeting_authentication"=> true,
-                        "meeting_invitees"=> [
-                            [
-                                "email"=> "inshag16@gmail.com",
-                                "email"=> "asif.zardari.ppp1@gmail.com",
-                            ]
-                        ],
                         "mute_upon_entry"=> false,
                         "participant_video"=> false,
                         "private_meeting"=> false,
@@ -125,7 +138,7 @@ class MeetingController extends Controller
                 ];
                 $meeting = createMeeting($data);
                 // echo $meeting->id; die;
-                if($meeting->id){
+                if($meeting && $meeting->id){
                     $event = MeetingModel::create([
                         'title' => $request->title,
                         'description' => $request->description,
@@ -142,29 +155,47 @@ class MeetingController extends Controller
                         'end' => $request->end,
                     ]);
                     return response()->json($event);
+                }else{
+                    return response('Error in zoom meeting API, Please try again');
                 }
 
              break;
   
            case 'update':
-              $event = MeetingModel::find($request->id)->update([
-                  'title' => $request->title,
-                  'description' => $request->description,
-                  'host_email' => $meeting->host_email,
-                  'host_id' => $meeting->host_id,
-                  'zoom_meeting_id' => $meeting->id,
-                  'zoom_meeting_duration' => $meeting->duration,
-                  'meeting_start_url' => $meeting->start_url,
-                  'meeting_join_url' => $meeting->join_url,
-                  'meeting_password' => $meeting->password,
-                  'meeting_timezone' => $meeting->timezone,
-                  'client_id' => Auth::user()->client_id,
-                  'start' => $request->start,
-                  'end' => $request->end,
-              ]);
- 
-              return response()->json($event);
-             break;
+            $event = MeetingModel::where(['id'=>$request->id])->first();
+            if($event && $event->id){
+                $data = [
+                    "agenda"=>$request->description,
+                    "password"=>$request->password,
+                    "pre_schedule"=>false,
+                    "start_time"=> $request->start,
+                    "timezone"=> "America/Los_Angeles",
+                    "topic"=> $request->title,
+                    "type"=> 2
+                ];
+                $meeting = updateMeeting($event->zoom_meeting_id, $data);
+                // var_dump($meeting); die;
+                if($meeting){
+                    $event1 = MeetingModel::find($request->id)->update([
+                        'title' => $request->title,
+                        'description' => $request->description,
+                        'zoom_meeting_duration' => $request->duration,
+                        'meeting_password' => $request->password,
+                        'start' => $request->start,
+                        'end' => $request->end,
+                    ]);
+                    if($event1){
+                        return response()->json($event);
+                    }else{
+                        return response()->json('Meeting update error, please try again');
+                    }
+                }else{
+                    return response()->json('Zoom API error, please try again');
+                }
+            }else{
+                return response()->json('Meeting not found in database');
+            }
+            break;
   
            case 'delete':
                 $event = MeetingModel::find($request->id);
@@ -185,4 +216,23 @@ class MeetingController extends Controller
              break;
         }
     }
+    public function create()
+    {
+        // $permission = Permission::get();
+        $meetingAddActive = 'active';
+        $pageTitle = 'Create New Meeting';
+        $meetingOpening = 'menu-is-opening';
+        $meetingOpend = 'menu-open';
+        return view('admin.meetings.form',compact('pageTitle','meetingAddActive', 'meetingOpening', 'meetingOpend'));
+    }
+    public function edit($id)
+    {
+        $item = MeetingModel::find($id);
+        $meetingListActive = 'active';
+        $pageTitle = 'Edit Meeting';
+        $meetingOpening = 'menu-is-opening';
+        $meetingOpend = 'menu-open';
+        return view('admin.meetings.edit',compact('item','pageTitle','meetingListActive', 'meetingOpening', 'meetingOpend'));
+    }
+
 }

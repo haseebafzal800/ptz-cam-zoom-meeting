@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','store']]);
+         $this->middleware('permission:user-create', ['only' => ['create','store']]);
+         $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:approve-user', ['only' => ['show']]);
+    }
     /**
      * Display a listing of the rpermissionsesource.
      *
@@ -100,7 +109,11 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        return view('admin.users.show',compact('user'));
+        $pageTitle = 'User View';
+        $userListActive = 'active';
+        $userOpening = 'menu-is-opening';
+        $userOpend = 'menu-open';
+        return view('admin.users.show',compact('user', 'pageTitle', 'userListActive', 'userOpening', 'userOpend'));
     }
     
     /**

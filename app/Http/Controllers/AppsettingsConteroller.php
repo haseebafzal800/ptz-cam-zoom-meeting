@@ -11,7 +11,9 @@ class AppsettingsConteroller extends Controller
 {
     function __construct()
     {
-        // dd('dfdfdf');
+        $this->middleware('auth');
+         $this->middleware('permission:zoom-settings', ['only' => ['zoomSettings','zoomSettingsUpdate']]);
+         $this->middleware('permission:app-settings', ['only' => ['index','update']]);
     }
     public function index() {
         $data['item'] = getAppSettings();
@@ -22,13 +24,13 @@ class AppsettingsConteroller extends Controller
         return view('admin.appsettings.index', $data);
     }
     public function update(Request $request){
-        // echo"<pre>";
-        // print_r($request->all()); die;
         $data = AppSettingsModel::find($request->id);
         $data->update($request->all());
         
         if($request->hasFile('logo') && $request->file('logo')->isValid()){
-            $data->clearMediaCollection('images');
+            // echo"<pre>";
+            // print_r($request->all()); die;
+            $data->clearMediaCollection('logo');
             $data->addMediaFromRequest('logo')->toMediaCollection('logo');
         }
         session()->flash('msg', 'Successfully saved the data!');

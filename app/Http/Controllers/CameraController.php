@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Cookie;
 
 class CameraController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:camera-settings', ['only' => ['index','addCams']]);
+    }
     public function index(Request $request)
     {
         $data['pageTitle'] = 'Camera Settings';

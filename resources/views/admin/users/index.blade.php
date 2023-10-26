@@ -45,7 +45,7 @@
             </td>
             <td>
             @can('approve-user')
-            <!-- <a class="btn btn-xs btn-info" href="{{ route('users.show',$user->id) }}"><i class="fas fa-eye"></i></a> -->
+                <a class="btn btn-xs btn-info" href="{{ route('users.show',$user->id) }}"><i class="fas fa-eye"></i></a>
                 @if($user->client_id > 0 && $user->is_approved=='on')
                     <a class="btn btn-xs btn-primary" href="{{ route('users.unapprove',$user->id) }}"><i class="fas fa-check"></i></a>
                 @elseif($user->client_id == '' && $user->is_approved=='ban')

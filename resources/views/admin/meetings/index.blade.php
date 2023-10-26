@@ -15,8 +15,8 @@
               </div> -->
               <!-- /.card-header -->
               
-              <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+              <div class="card-body table-responsive ">
+                <table id="example1" class="table table-bordered table-striped ">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -28,7 +28,7 @@
                         <th>Join URL</th>
                         <th>Password</th>
                         <th>Time Zone</th>
-                        <th width="100px">Action</th>
+                        <th style="width: 50px !important;" >Action</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -44,7 +44,7 @@
                     <th>Join URL</th>
                     <th>Password</th>
                     <th>Time Zone</th>
-                    <th width="100px">Action</th>
+                    <th style="width: 50px !important;" >Action</th>
                     </tr>
                   </tfoot>
                 </table>
@@ -66,7 +66,39 @@
   @include('includes.admin.scripts')
   @include('includes.admin.dataTableScripts')
     <script type="text/javascript">
+      function DeleteMeeting(btn, url){
+          var id = $(btn).attr('id');
+          var tr = $(btn).closest('tr');
+          $.ajaxSetup({
+              headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              }
+          });
+          Swal.fire({
+            title: "Once removed, Can't be recovered?",
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Cancel`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+              $.post(url, {id: id, type: 'delete'}, function(resp){
+                if(resp){
+                  $(tr).hide();
+                  // $(tr).remove().draw( false );
+                  $(tr).remove();
+                  Swal.fire('Deleted!', '', 'success')
+                }else{
+                  Swal.fire('Something went wrong, try again!', '', 'warning')
+                }
+              })
+            }
+          })
+        }
       $(function () {
+
+        
         
         var table = $('#example1').DataTable({
           

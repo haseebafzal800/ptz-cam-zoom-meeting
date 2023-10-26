@@ -1,5 +1,6 @@
-@extends('layouts.admin.app')
+@extends('layouts.admin.default')
 @section('content')
+@include('includes.admin.breadcrumb')
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
@@ -9,7 +10,17 @@
                         <h2> Show User</h2>
                     </div>
                     <div class="pull-right">
-                        <a class="btn btn-primary" href="{{ route('users.index') }}"> Back</a>
+                        <a class="btn btn-primary btn-sm" href="{{ route('users.index') }}"> Back</a>
+                        @can('approve-user')
+                            @if($user->client_id > 0 && $user->is_approved=='on')
+                                <a class="btn btn-sm btn-primary" href="{{ route('users.unapprove',$user->id) }}">Approved</i></a>
+                            @elseif($user->client_id == '' && $user->is_approved=='ban')
+                                <a class="btn btn-sm btn-danger" href="{{ route('users.unapprove',$user->id) }}">Rejected</i></a>
+                            @else
+                                <a class="btn btn-sm btn-primary" href="{{ route('users.approved',$user->id) }}">Approve</i></a>
+                                <a class="btn btn-sm btn-danger" href="{{ route('users.unapprove',$user->id) }}">Reject</a>
+                            @endif
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -44,4 +55,6 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+  @include('includes.admin.footer')
+  @include('includes.admin.scripts')
   @stop

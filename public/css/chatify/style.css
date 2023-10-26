@@ -102,7 +102,7 @@ body {
 .messenger {
   display: inline-flex;
   width: 100%;
-  height: 80vh;
+  height: 100%;
   font-family: sans-serif;
 }
 .messenger-listView {
@@ -114,13 +114,14 @@ body {
   left: 0px;
   right: 0px;
   z-index: 1;
+  height: max-content;
   background: transparent;
   width: 45%;
   min-width: 200px;
   overflow: auto;
 }
 .messenger-listView .m-header {
-  height: var(--listView-header-height);
+  height: 15vh;
 }
 .messenger-listView .m-header > nav {
   padding: var(--headers-padding);
@@ -131,6 +132,25 @@ body {
   gap: 5px;
   overflow: hidden;
   width: 100%;
+  height: 100vh !important;
+}
+.messenger-listView {
+  margin-top: 55px;
+}
+@media only screen and (min-width: 681px){
+  .messenger-messagingView {
+    height: 85vh !important;
+  }
+  .messenger-listView {
+    margin-top: 0px;
+  }
+}
+@media only screen and (min-width: 681px) and (max-width: 980px){
+  .messenger-listView {
+    z-index: 9999;
+    position: fixed;
+    height: 100%;
+  }
 }
 .messenger-messagingView .m-header {
   padding: var(--headers-padding);
@@ -206,10 +226,17 @@ body {
 }
 .messenger-tab {
   overflow: auto;
-  height: calc(100vh - var(--listView-header-height) - 2px);
+  height: 80vh;
   display: none;
   position: relative;
 }
+
+@media only screen and (min-width: 681px){
+  .messenger-tab {
+    height: 70vh;
+  }
+}
+
 .add-to-favorite {
   display: none;
 }
@@ -1053,7 +1080,6 @@ div.loadingPlaceholder-date {
     position: fixed;
     top: 0;
     left: 0;
-    height: 100%;
   }
   .messenger-infoView {
     display: none;
@@ -1062,6 +1088,7 @@ div.loadingPlaceholder-date {
   }
   .messenger-listView {
     width: 100%;
+    height: max-content;
     max-width: unset;
   }
   .listView-x {
@@ -1177,8 +1204,18 @@ div.loadingPlaceholder-date {
   border-radius: 4px;
   background: transparent;
   transition: all 0.3s ease;
+
 }
 .emoji-picker__emojis::-webkit-scrollbar-thumb {
   border-radius: 4px;
   background: transparent;
+}
+.emoji-picker{
+  margin-top: 250px !important;
+}
+
+@media (min-width: 768px){
+  body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-footer{
+    margin-left: 0px;
+  }
 }

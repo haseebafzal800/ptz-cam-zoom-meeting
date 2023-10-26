@@ -59,7 +59,7 @@
                     <div class="col-sm-6">
                       <div class="form-group">
                         <label for="logo">Logo</label>
-                        <input type="file" name="logo"  value="{{ $item->logo }}" class="form-control" id="logo">
+                        <input type="file" name="logo" class="form-control" id="logo">
                         @error('logo')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -69,7 +69,7 @@
                     <div class="col-sm-6">
                       <div class="form-group">
                         <label for="logo" class="invisible">Logo</label><br>
-                        <img src="{{ $item->getFirstMediaUrl('logo', 'thumb') }}" class="img img-fluid">
+                        <img src="{{ $item->getFirstMediaUrl('logo', 'thumb') }}" style="width:100px; background-color: gainsboro; padding: 5px;" class="img img-fluid">
                       </div>
                     </div>
                     <div class="col-sm-6">
@@ -78,32 +78,6 @@
                       </div>
                     </div>
                   </div>
-                  <?php /*<div class="d-none">
-                  <div class="form-group">
-                    <label for="summernote">Body</label>
-                    <textarea name="body" id="summernote">{{ $item->body }}</textarea>
-                    @error('body')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                  </div>
-                  
-
-                  <div class="form-group">
-                    <label for="mataDescription">Mata Description</label>
-                    <input type="text" name="mataDescription" value="{{ $item->mataDescription }}" class="form-control" id="mataDescription" placeholder="Enter Mata Description">
-                    @error('mataDescription')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                  </div>
-
-                  <div class="form-group">
-                    <label for="mataTags">Mata Tags</label>
-                    <input type="text" name="mataTags" value="{{ $item->mataTags }}" class="form-control" id="mataTags" placeholder="Enter Mata Tags">
-                    @error('mataTags')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                  </div>
-                  </div> */ ?>
 
                 </div>
                 <!-- /.card-body -->
@@ -153,32 +127,7 @@
                       </div>
                     </div>
                   </div>
-                  <?php /*<div class="d-none">
-                  <div class="form-group">
-                    <label for="summernote">Body</label>
-                    <textarea name="body" id="summernote">{{ $item->body }}</textarea>
-                    @error('body')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                  </div>
                   
-
-                  <div class="form-group">
-                    <label for="mataDescription">Mata Description</label>
-                    <input type="text" name="mataDescription" value="{{ $item->mataDescription }}" class="form-control" id="mataDescription" placeholder="Enter Mata Description">
-                    @error('mataDescription')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                  </div>
-
-                  <div class="form-group">
-                    <label for="mataTags">Mata Tags</label>
-                    <input type="text" name="mataTags" value="{{ $item->mataTags }}" class="form-control" id="mataTags" placeholder="Enter Mata Tags">
-                    @error('mataTags')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                  </div>
-                  </div> */ ?>
 
                 </div>
                 <!-- /.card-body -->

@@ -125,6 +125,7 @@
 @include('Chatify::layouts.footerLinks')
 
 @include('includes.admin.scripts')
+@include('includes.admin.footer')
 
 <script>
 $(document).ready(function () {
