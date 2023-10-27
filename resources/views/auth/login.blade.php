@@ -13,6 +13,12 @@
   <link rel="stylesheet" href="{{@url('admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{@url('admin/dist/css/adminlte.min.css')}}">
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@300&display=swap" rel="stylesheet">
+      
+  
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
@@ -22,9 +28,15 @@
     src: url('../../admin/font_nindeo/Kodchasan-ExtraLight.ttf') format('woff');
   }
 
-  *{
-    font-family: 'Kodchasan-ExtraLight' !important;
-  }
+    *{ 
+      /*font-family: 'Kodchasan-ExtraLight' !important;*/
+      font-family: 'Kodchasan', sans-serif !important;
+    }
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator{
+      /*font-family: 'Kodchasan-ExtraLight' !important;*/
+      font-family: 'Kodchasan', sans-serif !important;
+    }
+    
   </style>
   <!-- /.login-logo -->
   <div class="card card-outline card-primary">
