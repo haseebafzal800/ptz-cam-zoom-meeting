@@ -61,6 +61,7 @@ Route::get('/meeting/{meetingId}/participent/delete/{id}', [App\Http\Controllers
 Route::get('camera-settings', [CameraController::class, 'index']);
 Route::get('camera-settings/{id?}', [CameraController::class, 'index']);
 Route::post('camera-setting/add-cams', [CameraController::class, 'addCams'])->name('add-cam');
+Route::post('live-stream', [CameraController::class, 'liveStream'])->name('live-stream');
 //Users
 Route::get('users/approved/{id}', [UserController::class, 'approved'])->name('users.approved');
 Route::get('users/unapprove/{id}', [UserController::class, 'unapprove'])->name('users.unapprove');

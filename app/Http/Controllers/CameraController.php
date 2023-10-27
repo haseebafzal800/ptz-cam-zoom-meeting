@@ -24,6 +24,20 @@ class CameraController extends Controller
         return view('admin.camera.index-multi-cam', $data);
     }
 
+    public function liveStream(Request $request){
+        $data = [
+            "page_url"=>$request->pageUrl,
+            "stream_key"=>$request->streamingKey,
+            "stream_url"=>$request->streamingUrl,
+            "resolution"=>$request->streamingResolution
+        ];
+        $meeting = updateLiveStreaming($request->meeting_id, $data);
+        if($meeting){
+            $meetingInfo = getLiveStreamInfo($request->meeting_id);
+            var_dump($meetingInfo); die;
+        }
+
+    }
     public function addCams(Request $request){
         // if(($request->cam1)!=''){
             setcookie('cam1', $request->cam1, time() + (30 * 24 * 60), '/');

@@ -177,7 +177,7 @@
                 <div class="row select-items-bar py-4">
                     <div class="col-12">
                         <form>
-                            <div class="row d-flex justify-content-center text-center text-dark">
+                            <?php /* <div class="row d-flex justify-content-center text-center text-dark">
                                 <div class="col-12 col-lg-8 d-flex flex-row justify-content-center align-items-baseline">
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"/>
@@ -201,10 +201,10 @@
                                 <div class="col-10 col-lg-8 pt-3">
                                     <div class="form-group text-left">
                                         
-                                        <a class="btn btn-sm btn-warning" data-url="{{ @url('meeting/getLiveStreamInfo/'.request()->segment(2)) }}" id="formControlRangeLiveStream">Live Streaming</a>
+                                        <a class="btn btn-sm btn-warning" data-toggle="modal" data-target="#basicModalLiveStream" data-url="{{ @url('meeting/getLiveStreamInfo/'.request()->segment(2)) }}" id="formControlRangeLiveStream">Live Streaming</a>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */ ?>
                             <div class="row d-flex justify-content-center flex-wrap py-4">
                                 <div class="col-6 col-md-4 col-lg-2">
                                     <div class="form-group text-center ">
@@ -336,6 +336,60 @@
                                 <label>Camera #8</label>
                                 <input type="text" name="cam8" value="{{$_COOKIE['cam8']??''}}" class="form-input form-control  border ipv4 camera8" id="ipv4" 
                                 placeholder="xxx.xxx.xxx.xxx"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+    <!-- model -->
+    <!-- model live streaming -->
+    <div class="modal fade" id="basicModalLiveStream" tabindex="-1" role="dialog" aria-labelledby="basicModalLiveStream" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Live Streaming Settings</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="{{@route('live-stream')}}">
+                @csrf
+                <input type="hidden" name="meeting_id" value="{{request()->segment(2)}}">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label>Youtube Streaming Key</label>
+                                <input type="text" name="streamingKey" value="" class=" form-control form-input border streamingKey" id="streamingKey" 
+                                placeholder="Youtube Streaming Key"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label>Streaming URL</label>
+                                <input type="text" name="streamingUrl" value="" class="form-input form-control border streamingUrl" id="streamingUrl" 
+                                placeholder=" Zoom Streaming URL"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label>Page URL</label>
+                                <input type="text" name="pageUrl" value="" class="form-input form-control border pageUrl" id="pageUrl" 
+                                placeholder=" Youtube Page URL"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label>Set Resolution</label>
+                                <input type="text" name="streamingResolution" value="" class="form-input form-control border streamingResolution" id="streamingResolution" 
+                                placeholder="720p, 1080p etc"/>
                             </div>
                         </div>
                     </div>

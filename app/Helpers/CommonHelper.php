@@ -164,40 +164,67 @@ if (!function_exists('userLvlAccess')) {
         function getLiveStreamInfo($meeting_id){
             $accessToken = getZoomAccessToken();
             if($accessToken){
-                $url = "https://api.zoom.us/v2/meetings/82940927738/livestream";
-                // $url = "https://api.zoom.us/v2/meetings/$meeting_id/livestream";
+                $url = "https://api.zoom.us/v2/meetings/$meeting_id/livestream";
+                // CURLOPT_URL => "https://api.zoom.us/v2/users/$user_id/meetings",
 
-                // Set up the headers with the Authorization token
-                $headers = array(
-                    "Authorization: Bearer {$accessToken}"
-                );
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_CUSTOMREQUEST => "GET",
+                // CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HTTPHEADER => array(
+                    "Authorization: Bearer  $accessToken",
+                    "Content-Type: application/json"
+                ),
+                ));
+                    $response = curl_exec($curl);
+                    
+                    $response_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+                    return $response_code;
+                    curl_close($curl);
+                    if ($response_code == 204) {
+                        return $response;
+                    } else {
+                        return false;
+                    }
+            }
+            else{
+                return false;
+            }
+            
+        }
+    }
 
-                // Initialize cURL session
-                $ch = curl_init($url);
+    if (!function_exists('updateLiveStreaming')) {
+        function updateLiveStreaming($meeting_id,$data) {
+            $accessToken = getZoomAccessToken();
+            if($accessToken){
+                $url = "https://api.zoom.us/v2/meetings/$meeting_id/livestream";
+                // CURLOPT_URL => "https://api.zoom.us/v2/users/$user_id/meetings",
 
-                // Set cURL options
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-                // Execute cURL session and get the response
-                $response = curl_exec($ch);
-                $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_CUSTOMREQUEST => "PATCH",
+                CURLOPT_POSTFIELDS =>json_encode($data),
+                CURLOPT_HTTPHEADER => array(
+                    "Authorization: Bearer  $accessToken",
+                    "Content-Type: application/json"
+                ),
+            ));
+                $response = curl_exec($curl);
                 
-                curl_close($ch);
-                // Check the response status code and handle any errors
-                if ($response_code == 200) {
-                    // echo "Meeting deleted successfully.";
+                $response_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+                // return $response_code;
+                curl_close($curl);
+                if ($response_code == 204) {
                     return $response;
                 } else {
                     return false;
-                    // echo "Error deleting meeting. Status code: {$response_code}\n";
-                    // echo $response;
                 }
-
-                // Close cURL session
+            }else{
+                return false;
             }
-            
         }
     }
     if (!function_exists('updateMeeting')) {
