@@ -182,6 +182,15 @@
           </li>
           @endcan
 
+          <li class="nav-item {{$appSettingsOpening??''}} {{$appSettingsOpend??''}}">
+            <a href="{{@url('/change-password')}}" class="nav-link {{$appSettings??''}}">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Change Password
+              </p>
+            </a>
+          </li>
+
           @can('zoom-settings')
           <li class="nav-item {{$appSettingsOpening??''}} {{$appSettingsOpend??''}}">
             <a href="{{@url('/zoom-settings')}}" class="nav-link {{$appSettings??''}}">

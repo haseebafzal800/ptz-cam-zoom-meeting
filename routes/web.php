@@ -65,6 +65,8 @@ Route::post('live-stream', [CameraController::class, 'liveStream'])->name('live-
 //Users
 Route::get('users/approved/{id}', [UserController::class, 'approved'])->name('users.approved');
 Route::get('users/unapprove/{id}', [UserController::class, 'unapprove'])->name('users.unapprove');
+Route::get('change-password', [UserController::class, 'change_password'])->name('change-password');
+Route::get('change-password', [UserController::class, 'change_password'])->name('change-password');
 //Notifications
 
 Route::get('/notifications', [NotificationsController::class, 'index'])->name('notifications');

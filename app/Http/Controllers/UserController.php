@@ -133,6 +133,16 @@ class UserController extends Controller
     
         return view('admin.users.edit',compact('user','roles','userRole', 'userListActive', 'userOpening', 'userOpend'));
     }
+    public function change_password()
+    {
+        $user = User::find(Auth::user()->id);
+        $pageTitle = 'Change Password';
+        $profileActive = 'active';
+        $profileOpening = 'menu-is-opening';
+        $profileOpend = 'menu-open';
+    
+        return view('admin.users.change-password',compact('user', 'pageTitle', 'profileActive', 'profileOpening', 'profileOpend'));
+    }
 
     public function approved($id)
     {
@@ -193,6 +203,8 @@ class UserController extends Controller
         return redirect()->route('users.index')
                         ->with('success','User updated successfully');
     }
+
+
     
     /**
      * Remove the specified resource from storage.
