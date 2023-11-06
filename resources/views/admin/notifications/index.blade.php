@@ -66,11 +66,17 @@
             serverSide: true,
             ajax: '{{ @url("/notifications") }}',
             columns: [
-                {data: 'id', name: 'id'},
+                { data: 'rownum', name: 'rownum', orderable: false, searchable: false },
+                // {data: 'id', name: 'id'},
                 {data: 'title', name: 'title'},
                 {data: 'description', name: 'description'},
                 {data: 'action', name: 'action', orderable: false, searchable: true},
             ]
+        });
+        table.on('draw.dt', function () {
+            table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
         });
         //console.log(table);
       });

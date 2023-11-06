@@ -47,10 +47,13 @@ class NotificationsController extends Controller
                     // $btn .= ' <a href="'.@url("/meeting/$row->meeting_id/participent".$row->id).'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>';
                     return $btn;
                 })
-                ->rawColumns(['description', 'action'])
+                ->addColumn('rownum', function ($row) {
+                    return '';
+                })
+                ->rawColumns(['rownum', 'description', 'action'])
                 ->make(true);
         }
-        $data['pageTitle'] = 'Notification';
+        $data['pageTitle'] = 'Notifications';
         $data['notificationsListActive'] = 'active';
         $data['notificationsOpening'] = 'menu-is-opening';  
         $data['notificationsOpend'] = 'menu-open';

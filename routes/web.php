@@ -33,8 +33,11 @@ Route::any('/zoom-create-meeting', [ZoomController::class, 'createMeeting'])->na
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('admin/home', [App\Http\Controllers\HomeController::class, 'adminHome'])->name('admin.home')->middleware('is_admin');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'adminHome'])->name('admin.home');
+Route::get('/admin/home', function(){
+    return redirect()->route('admin.home');
+})->middleware('is_admin');
 Route::get('/app-settings', [AppsettingsConteroller::class, 'index'])->name('app-settings')->middleware('is_admin');
 Route::post('/app-settings/update', [AppsettingsConteroller::class, 'update'])->name('app-settings-update')->middleware('is_admin');
 
@@ -64,9 +67,10 @@ Route::post('camera-setting/add-cams', [CameraController::class, 'addCams'])->na
 Route::post('live-stream', [CameraController::class, 'liveStream'])->name('live-stream');
 //Users
 Route::get('users/approved/{id}', [UserController::class, 'approved'])->name('users.approved');
+Route::get('users/destroy/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 Route::get('users/unapprove/{id}', [UserController::class, 'unapprove'])->name('users.unapprove');
 Route::get('change-password', [UserController::class, 'change_password'])->name('change-password');
-Route::get('change-password', [UserController::class, 'change_password'])->name('change-password');
+Route::post('change-password', [UserController::class, 'update_password'])->name('update-password');
 //Notifications
 
 Route::get('/notifications', [NotificationsController::class, 'index'])->name('notifications');

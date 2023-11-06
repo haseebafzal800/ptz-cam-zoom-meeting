@@ -72,9 +72,10 @@
           
             processing: true,
             serverSide: true,
-            ajax: '{{ @url("meeting/request()->segment(2)/participents") }}',
+            ajax: "{{ @url('meeting/'.request()->segment(2).'/participents') }}",
             columns: [
-                {data: 'id', name: 'id'},
+              { data: 'rownum', name: 'rownum', orderable: false, searchable: false },
+                // {data: 'id', name: 'id'},
                 {data: 'name', name: 'name'},
                 {data: 'email', name: 'email'},
                 {data: 'phone', name: 'phone'},
@@ -83,6 +84,11 @@
                 {data: 'start', name: 'start'},
                 {data: 'action', name: 'action', orderable: false, searchable: true},
             ]
+        });
+        table.on('draw.dt', function () {
+            table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
         });
         //console.log(table);
       });

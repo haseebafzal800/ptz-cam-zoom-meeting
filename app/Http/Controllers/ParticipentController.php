@@ -35,7 +35,9 @@ class ParticipentController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = DB::table('participents')->select('participents.id', 'first_name', 'last_name', 'email', 'meeting_id', 'title', 'start', 'phone', 'zoom_id', 'join_url', 'registrant_id', 'participant_pin_code')->join('meetings', 'participents.meeting_id', '=', 'meetings.id')->get();
+            // $segment2 = $request->segment(2);
+            // var_dump($segment2); die;
+            $data = DB::table('participents')->where('meeting_id', request()->segment(2))->select('participents.id', 'first_name', 'last_name', 'email', 'meeting_id', 'title', 'start', 'phone', 'zoom_id', 'join_url', 'registrant_id', 'participant_pin_code')->join('meetings', 'participents.meeting_id', '=', 'meetings.id')->get();
             
             // $data = ParticipentModel::select('id', 'first_name', 'last_name', 'email', 'meeting_id', 'phone', 'zoom_id', 'join_url', 'registrant_id', 'participant_pin_code')->get();
             return Datatables::of($data)->addIndexColumn()
@@ -48,7 +50,10 @@ class ParticipentController extends Controller
                     // $btn .= ' <a href="'.@url("/meeting/$row->meeting_id/participent".$row->id).'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>';
                     return $btn;
                 })
-                ->rawColumns(['name','action'])
+                ->addColumn('rownum', function ($row) {
+                    return '';
+                })
+                ->rawColumns(['rownum', 'name','action'])
                 ->make(true);
             }
         $data['pageTitle'] = 'Meeting participents';

@@ -47,7 +47,10 @@ class MeetingController extends Controller
                     }
                     return $btn;
                 })
-                ->rawColumns(['created_at', 'action'])
+                ->addColumn('rownum', function ($row) {
+                    return '';
+                })
+                ->rawColumns(['rownum','created_at', 'action'])
                 ->make(true);
             }
         $data['pageTitle'] = 'Meetings';
@@ -80,7 +83,7 @@ class MeetingController extends Controller
             }
              return response()->json($data1);
         }
-        $data['pageTitle'] = 'App Settings';
+        $data['pageTitle'] = 'Meeting Calendar';
         $data['calendarSettings'] = 'active';
         $data['meetingOpening'] = 'menu-is-opening';  
         $data['meetingOpend'] = 'menu-open';
@@ -220,7 +223,7 @@ class MeetingController extends Controller
     {
         // $permission = Permission::get();
         $meetingAddActive = 'active';
-        $pageTitle = 'Create New Meeting';
+        $pageTitle = 'Create Meeting';
         $meetingOpening = 'menu-is-opening';
         $meetingOpend = 'menu-open';
         return view('admin.meetings.form',compact('pageTitle','meetingAddActive', 'meetingOpening', 'meetingOpend'));

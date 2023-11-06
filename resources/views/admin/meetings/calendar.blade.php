@@ -14,9 +14,6 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-  @include('includes.admin.footer')
-  @include('includes.admin.scripts')
-  @include('includes.admin.fullcalander')
   <style>
     .content-header{
         display: none;
@@ -33,7 +30,7 @@
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Create Meeting</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="close btn-mdl-cls" data-dismiss="modal">&times;</button>
         </div>
         
         <!-- Modal body -->
@@ -85,6 +82,11 @@
       </div>
     </div>
   </div>
+  @include('includes.admin.footer')
+  @include('includes.admin.scripts')
+  @include('includes.admin.fullcalander')
+
+  
   <?php $selectable = false; ?>
   <?php $editable = false; ?>
   @can("meeting-create")
@@ -92,10 +94,13 @@
   <?php $editable = true; ?>
   @endcan
 <script>
+
 $(document).ready(function () {
 $('body').addClass('sidebar-collapse');
 
-
+$('.btn-mdl-cls').click(function(){
+  $('#myModal').modal('hide');
+})
    
 var SITEURL = "{{ url('/') }}";
 

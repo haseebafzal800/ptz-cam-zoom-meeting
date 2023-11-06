@@ -106,7 +106,7 @@
             serverSide: true,
             ajax: "{{ route('meetings') }}",
             columns: [
-                {data: 'id', name: 'id'},
+              { data: 'rownum', name: 'rownum', orderable: false, searchable: false },
                 {data: 'title', name: 'title'},
                 // {data: 'description', name: 'description'},
                 {data: 'start', name: 'start'},
@@ -117,6 +117,11 @@
                 {data: 'meeting_timezone', name: 'meeting_timezone'},
                 {data: 'action', name: 'action', orderable: false, searchable: true},
             ]
+        });
+        table.on('draw.dt', function () {
+            table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
         });
         //console.log(table);
       });

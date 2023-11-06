@@ -1,77 +1,89 @@
 @extends('layouts.admin.default')
 @section('content')
 @include('includes.admin.breadcrumb')
-    <!-- Main content -->
+@include('includes.admin.dataTableCss')
     <section class="content">
       <div class="container-fluid">
-      <div class="row">
-            <div class="col-lg-12 margin-tb">
-                <div class="pull-left">
-                    <h2>Users Management</h2>
-                </div>
-                <div class="pull-right d-none">
-                    <a class="btn btn-success" href="{{ route('users.create') }}"> Create New User</a>
-                </div>
+        <div class="row">
+          <!-- <div class="col-12">
+            <a href="{{@url('/meeting/'.request()->segment(2).'/add-participent')}}" class="btn btn-primary  btn-sm">Add New</a>
+            <a href="{{@url('/meeting/'.request()->segment(2).'/add-batch-participent')}}" class="btn btn-primary btn-sm">Add in bulk</a>
+          </div> -->
+          <div class="col-12">
+          @if(session()->has('msg'))
+                <p class="alert text-center {{ session()->get('alert-class') }}">{{ session()->get('msg') }}</p>
+              @endif
+            <div class="card">
+              <!-- <div class="card-header">
+                <h3 class="card-title">DataTable with default features</h3>
+              </div> -->
+              <!-- /.card-header -->
+              
+              <div class="card-body table-responsive">
+                <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th width="140px">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+                  <tfoot>
+                  <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Role</th>
+                      <th width="100px">Action</th>
+                  </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- /.card-body -->
             </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
         </div>
-
-
-        @if ($message = Session::get('success'))
-        <div class="alert alert-success">
-        <p>{{ $message }}</p>
-        </div>
-        @endif
-
-
-        <table class="table table-bordered">
-        <tr>
-        <th>No</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Roles</th>
-        <th width="280px">Action</th>
-        </tr>
-        @foreach ($data as $key => $user)
-        <tr>
-            <td>{{ ++$i }}</td>
-            <td>{{ $user->name }}</td>
-            <td>{{ $user->email }}</td>
-            <td>
-            @if(!empty($user->getRoleNames()))
-                @foreach($user->getRoleNames() as $v)
-                <label class="badge badge-success">{{ $v }}</label>
-                @endforeach
-            @endif
-            </td>
-            <td>
-            @can('approve-user')
-                <a class="btn btn-xs btn-info" href="{{ route('users.show',$user->id) }}"><i class="fas fa-eye"></i></a>
-                @if($user->client_id > 0 && $user->is_approved=='on')
-                    <a class="btn btn-xs btn-primary" href="{{ route('users.unapprove',$user->id) }}"><i class="fas fa-check"></i></a>
-                @elseif($user->client_id == '' && $user->is_approved=='ban')
-                    <a class="btn btn-xs btn-danger" href="{{ route('users.unapprove',$user->id) }}"><i class="fas fa-ban"></i></a>
-                @else
-                    <a class="btn btn-xs btn-primary" href="{{ route('users.approved',$user->id) }}"><i class="fas fa-check"></i></a>
-                    <a class="btn btn-xs btn-danger" href="{{ route('users.unapprove',$user->id) }}"><i class="fas fa-ban"></i></a>
-                @endif
-            @endcan
-            <a class="btn btn-xs btn-primary" href="{{ route('users.edit',$user->id) }}"><i class="fas fa-pencil-alt"></i></a>
-                {!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $user->id],'style'=>'display:inline']) !!}
-                <button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></button>
-                {!! Form::close() !!}
-            </td>
-        </tr>
-        @endforeach
-        </table>
-
-
-        {!! $data->render() !!}
-      </div><!-- /.container-fluid -->
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
     </section>
-    <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
 
   @include('includes.admin.footer')
   @include('includes.admin.scripts')
-  @stop
+  @include('includes.admin.dataTableScripts')
+    <script type="text/javascript">
+      $(function () {
+        
+        var table = $('#example1').DataTable({
+          
+            processing: true,
+            serverSide: true,
+            ajax: '{{ @url("/users") }}',
+            columns: [
+                // {data: 'id', name: 'id'},
+                { data: 'rownum', name: 'rownum', orderable: false, searchable: false },
+                {data: 'name', name: 'name'},
+                {data: 'email', name: 'email'},
+                {data: 'roles', name: 'roles'},
+                {data: 'action', name: 'action', orderable: false, searchable: true},
+            ]
+        });
+        table.on('draw.dt', function () {
+            table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        });
+        //console.log(table);
+      });
+          
+    </script>
+@stop

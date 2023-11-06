@@ -15,7 +15,7 @@ class CameraController extends Controller
     }
     public function index(Request $request)
     {
-        $data['pageTitle'] = 'Camera Settings';
+        $data['pageTitle'] = 'Camera Control';
         $data['cameraSettings'] = 'active';
         $data['cameraSettingsOpend'] = 'menu-open';
         $data['cameraSettingsOpening'] = 'menu-is-opening';

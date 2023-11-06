@@ -182,8 +182,8 @@
           </li>
           @endcan
 
-          <li class="nav-item {{$appSettingsOpening??''}} {{$appSettingsOpend??''}}">
-            <a href="{{@url('/change-password')}}" class="nav-link {{$appSettings??''}}">
+          <li class="nav-item {{$profileOpening??''}} {{$profileOpend??''}}">
+            <a href="{{@url('/change-password')}}" class="nav-link {{$profile??''}}">
               <i class="nav-icon fas fa-copy"></i>
               <p>
                 Change Password

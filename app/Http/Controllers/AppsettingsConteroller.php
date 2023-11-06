@@ -41,7 +41,7 @@ class AppsettingsConteroller extends Controller
     }
     public function zoomSettings() {
         $data['item'] = getZoomSettings(Auth::user()->client_id);
-        $data['pageTitle'] = 'App Settings';
+        $data['pageTitle'] = 'Zoom Settings';
         $data['appSettings'] = 'active';
         $data['appSettingsOpend'] = 'menu-open';
         $data['appSettingsOpening'] = 'menu-is-opening';

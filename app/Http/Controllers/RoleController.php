@@ -34,10 +34,11 @@ class RoleController extends Controller
     {
         $roles = Role::orderBy('id','DESC')->paginate(5);
 
+        $pageTitle = 'Roles';
         $roleListActive = 'active';
         $roleOpening = 'menu-is-opening';
         $roleOpend = 'menu-open';
-        return view('admin.roles.index',compact('roles', 'roleListActive', 'roleOpening', 'roleOpend'))
+        return view('admin.roles.index',compact('roles', 'pageTitle', 'roleListActive', 'roleOpening', 'roleOpend'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     
@@ -105,10 +106,11 @@ class RoleController extends Controller
             ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
             ->all();
         $roleListActive = 'active';
+        $pageTitle = 'Roles & Permissions';
         $roleOpening = 'menu-is-opening';
         $roleOpend = 'menu-open';
     
-        return view('admin.roles.edit',compact('role','permission','rolePermissions', 'roleListActive', 'roleOpening', 'roleOpend'));
+        return view('admin.roles.edit',compact('role','pageTitle', 'permission','rolePermissions', 'roleListActive', 'roleOpening', 'roleOpend'));
     }
     
     /**

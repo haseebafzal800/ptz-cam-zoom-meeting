@@ -11,6 +11,9 @@ use DB;
 use Hash;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use DataTables;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -30,18 +33,72 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if(Auth::user()->hasRole('Admin')){
-            $data = User::orderBy('id','DESC')->paginate(5);
-        }elseif(Auth::user()->hasRole('Client')){
-            $data = User::orderBy('id','DESC')->where('client_id', Auth::user()->client_id)->paginate(5);
+        if ($request->ajax()) {
+            if(Auth::user()->hasRole('Admin')){
+                $data = User::orderBy('id','DESC')->with('roles')->get();
+            }elseif(Auth::user()->hasRole('Client')){
+                $data = User::orderBy('id','DESC')->with('roles')->where('client_id', Auth::user()->client_id)->get();
+            }
+            // echo "<pre>"; print_r($data); die;
+            return Datatables::of($data)->addIndexColumn()
+                ->addColumn('roles', function ($row) {
+                    $roles='';
+                    $mroles = $row->getRoleNames();
+                    if(!empty($mroles)){
+                        foreach($mroles as $v){
+                            $roles .='<label class="badge badge-success">'.$v.'</label>';
+                        }
+                    }
+                    return $roles ;
+                })
+                ->addColumn('action', function($row){
+                    // $url = "/notification/delete/".$row->id;
+                    // $btn = '<a href="javascript:void(0)" onclick="DeleteMe(this, '."'".$url."'".')" class="btn btn-danger btn-xs btn-delete"><i class="fa fa-trash"></i></a>';
+                    // $btn .= ' <a href="'.@url("/meeting/$row->meeting_id/participent".$row->id).'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>';
+                    $btn='';
+                    if (Gate::allows('approve-user')){
+                        $btn .=' <a class="btn btn-xs btn-info" href="'.route('users.show',$row->id).'"><i class="fas fa-eye"></i></a>';
+                        if($row->client_id > 0 && $row->is_approved=='on'){
+                        $btn .=' <a class="btn btn-xs btn-primary" href="'.route('users.unapprove',$row->id).'"><i class="fas fa-check"></i></a>';
+                        }elseif($row->client_id == '' && $row->is_approved=='ban'){
+                        $btn .= ' <a class="btn btn-xs btn-danger" href="'.route('users.unapprove',$row->id).'"><i class="fas fa-ban"></i></a>';
+                        }else{
+                            $btn .= ' <a class="btn btn-xs btn-primary" href="'.route('users.approved',$row->id).'"><i class="fas fa-check"></i></a>';
+                        $btn .= ' <a class="btn btn-xs btn-danger" href="'.route('users.unapprove',$row->id).'"><i class="fas fa-ban"></i></a>';
+                        }
+                    }
+                    $btn .= ' <a class="btn btn-xs btn-primary" href="'.route('users.edit',$row->id).'"><i class="fas fa-pencil-alt"></i></a>';
+                    $url = url("/users/destroy/".$row->id);
+                    $btn .= ' <a href="javascript:void(0)" onclick="DeleteMe(this, '."'".$url."'".')" class="btn btn-danger btn-xs btn-delete"><i class="fa fa-trash"></i></a>';
+                       
+                    return $btn;
+                })
+                ->addColumn('rownum', function ($row) {
+                    return '';
+                })
+                ->rawColumns(['rownum','roles', 'action'])
+                ->make(true);
         }
-        
-        $userListActive = 'active';
-        $userOpening = 'menu-is-opening';
-        $userOpend = 'menu-open';
-        return view('admin.users.index',compact('data', 'userListActive', 'userOpening', 'userOpend'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+        $data['pageTitle'] = 'Users';
+        $data['userListActive'] = 'active';
+        $data['userOpening'] = 'menu-is-opening';  
+        $data['userOpend'] = 'menu-open';
+        return view('admin.users.index', $data);
     }
+    // public function index(Request $request)
+    // {
+    //     if(Auth::user()->hasRole('Admin')){
+    //         $data = User::orderBy('id','DESC')->paginate(10);
+    //     }elseif(Auth::user()->hasRole('Client')){
+    //         $data = User::orderBy('id','DESC')->where('client_id', Auth::user()->client_id)->paginate(10);
+    //     }
+        
+    //     $userListActive = 'active';
+    //     $userOpening = 'menu-is-opening';
+    //     $userOpend = 'menu-open';
+    //     return view('admin.users.index',compact('data', 'userListActive', 'userOpening', 'userOpend'))
+    //         ->with('i', ($request->input('page', 1) - 1) * 5);
+    // }
     
     /**
      * Show the form for creating a new resource.
@@ -52,9 +109,10 @@ class UserController extends Controller
     {
         $roles = Role::pluck('name','name')->all();
         $userCreateActive = 'active';
+        $pageTitle = 'Add User';
         $userOpening = 'menu-is-opening';
         $userOpend = 'menu-open';
-        return view('admin.users.create',compact('roles', 'userCreateActive', 'userOpening', 'userOpend'));
+        return view('admin.users.create',compact('roles', 'pageTitle', 'userCreateActive', 'userOpening', 'userOpend'));
     }
     
     /**
@@ -95,7 +153,6 @@ class UserController extends Controller
         }else{
             $user->assignRole($request->input('roles'));
         }
-        
     
         return redirect()->route('users.index')->with('success','User created successfully');
     }
@@ -109,7 +166,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        $pageTitle = 'User View';
+        $pageTitle = 'View User';
         $userListActive = 'active';
         $userOpening = 'menu-is-opening';
         $userOpend = 'menu-open';
@@ -126,12 +183,13 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $roles = Role::pluck('name','name')->all();
+        $pageTitle = 'Edit User';
         $userRole = $user->roles->pluck('name','name')->all();
         $userListActive = 'active';
         $userOpening = 'menu-is-opening';
         $userOpend = 'menu-open';
     
-        return view('admin.users.edit',compact('user','roles','userRole', 'userListActive', 'userOpening', 'userOpend'));
+        return view('admin.users.edit',compact('user', 'pageTitle', 'roles','userRole', 'userListActive', 'userOpening', 'userOpend'));
     }
     public function change_password()
     {
@@ -143,7 +201,36 @@ class UserController extends Controller
     
         return view('admin.users.change-password',compact('user', 'pageTitle', 'profileActive', 'profileOpening', 'profileOpend'));
     }
+    public function update_password(Request $request){
+        $validator = Validator::make($request->all(), [
+            'old-password' => 'required',
+            'password' => 'required|string|min:8|same:confirm-password',
+        ]);
+        
+        if ($validator->fails()) {
+            return redirect('change-password')
+            ->withErrors($validator)
+            ->withInput();
+        }
+        $user = User::find($request->id);
+        if (Hash::check($request->input('old-password'), $user->password)) {
+            // Update the user's password with the new password
+            $user->password = Hash::make($request->input('password'));
+            $user->save();
 
+            // Redirect to a success page or return a response
+            return redirect()->back()->with('success', 'Password changed successfully');
+        } else {
+            // If the current password is incorrect, show an error message
+            return redirect()->back()->withErrors(['current_password' => 'The current password is incorrect'])->withInput();
+        }
+
+    }
+    // private function passwordMatchesOld($oldPassword)
+    // {
+    //     $user = Auth::user(); // Get the currently authenticated user
+    //     return password_verify($oldPassword, $user->password);
+    // }
     public function approved($id)
     {
 
@@ -212,10 +299,18 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // public function destroy($id)
+    // {
+    //     User::find($id)->delete();
+    //     return redirect()->route('users.index')
+    //                     ->with('success','User deleted successfully');
+    // }
     public function destroy($id)
     {
-        User::find($id)->delete();
-        return redirect()->route('users.index')
-                        ->with('success','User deleted successfully');
+        if(User::find($id)->delete()){
+            return 'ok';
+        }else{
+            return 'notok';
+        }
     }
 }
