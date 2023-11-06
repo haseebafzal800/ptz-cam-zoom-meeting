@@ -84,3 +84,7 @@
   }
   
   .rating:hover > input:checked ~ label:before{ opacity: 0.4; }
+
+  .main-sidebar {
+    overflow-y: unset !important;
+}
