@@ -39,12 +39,33 @@
                 <div class="card-body">
                   <div class="row">
                     @csrf
+                    
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label for="start">Start At</label>
+                        <input type="datetime-local" min="{{date('Y-m-d H:i')}}" required name="start" value="" class="form-control" id="start" placeholder="">
+                        @error('start')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                      </div>
+                    </div>
+                    
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label for="end">End At</label>
+                        <input type="datetime-local" name="end" min="{{date('Y-m-d H:i')}}" required value="" class="form-control" id="end" placeholder="">
+                        @error('end')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                      </div>
+                    </div>
                     <div class="col-sm-12">
                       <div class="form-group">
                         <label for="meetingTitle">Meeting Topic</label>
                         <input required type="text" name="meetingTitle" class="form-control" id="meetingTitle" placeholder="Meeting Title/Topic">
                                               </div>
                     </div>
+                    
                     <div class="col-sm-12">
                       <div class="form-group">
                         <label for="meetingDescription">Description</label>
@@ -57,8 +78,6 @@
                         <input required type="text" name="meetingPassword" class="form-control" id="meetingPassword" placeholder="Meeting Password">
                                               </div>
                     </div>
-                    <input type="hidden" name="start" id="start" value="">
-                    <input type="hidden" name="end" id="end" value="">
                     
                     <div class="col-sm-12">
                         <div class="form-group">
@@ -187,7 +206,24 @@ var calendar = $('#calendar').fullCalendar({
                         }
                         // var title = prompt('Meeting Details:');
                         var start = $.fullCalendar.formatDate(start, "YYYY-MM-DD HH:mm:ss");
-                        var end = $.fullCalendar.formatDate(end, "YYYY-MM-DD HH:mm:ss");
+                        // Parse the date string into a Date object
+                        var originalDate = new Date(start);
+
+                        // Add 1 hour to the date
+                        originalDate.setHours(originalDate.getHours() + 1);
+
+                        var year = originalDate.getFullYear();
+                        var month = ("0" + (originalDate.getMonth() + 1)).slice(-2);
+                        var day = ("0" + originalDate.getDate()).slice(-2);
+                        var hours = ("0" + originalDate.getHours()).slice(-2);
+                        var minutes = ("0" + originalDate.getMinutes()).slice(-2);
+                        var seconds = ("0" + originalDate.getSeconds()).slice(-2);
+
+                        // Format the date and time
+                        var end = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+                        // var end = $.fullCalendar.formatDate(end, "YYYY-MM-DD HH:mm:ss");
+
+                        
                         $('#start').val(start);
                         $('#end').val(end);
                         $('#myModal').modal('show');
