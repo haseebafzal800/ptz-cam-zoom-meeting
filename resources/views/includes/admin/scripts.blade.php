@@ -64,6 +64,33 @@
           }
         })
       }
+
+      $(function () {
+
+        // function setEndDateTime(){
+        // Get references to the start and end date-time input fields
+        var startDateTime = document.getElementById("start");
+        var endDateTime = document.getElementById("end");
+
+        // Add a change event listener to the startDateTime input
+        startDateTime.addEventListener("change", function () {
+          // Get the selected start date and time as a JavaScript Date object
+          var startDate = new Date(startDateTime.value);
+
+          // Calculate the maximum allowed end date and time (30 hours later)
+          var maxEndDate = new Date(startDate.getTime() + 30 * 60 * 60 * 1000);
+          // var minEndDate = new Date(startDate.getTime());
+
+          // Format the maxEndDate to match the input's format (YYYY-MM-DDTHH:MM)
+          var maxEndDateString = maxEndDate.toISOString().slice(0, 16);
+          // var minEndDateString = minEndDate.toISOString().slice(0, 16);
+
+          // Set the max attribute of the endDateTime input
+          endDateTime.setAttribute("max", maxEndDateString);
+          // endDateTime.setAttribute("min", minEndDateString);
+          endDateTime.setAttribute("min", startDateTime.value);
+        });
+      });
 </script>
 
   <!-- ******For Message Notifictions******* -->

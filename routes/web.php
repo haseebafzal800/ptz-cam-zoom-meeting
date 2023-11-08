@@ -73,6 +73,13 @@ Route::get('change-password', [UserController::class, 'change_password'])->name(
 Route::post('change-password', [UserController::class, 'update_password'])->name('update-password');
 //Notifications
 
+// Route::get('/notifications', function(){
+//     $data['pageTitle'] = 'Notifications';
+//     $data['notificationsListActive'] = 'active';
+//     $data['notificationsOpening'] = 'menu-is-opening';  
+//     $data['notificationsOpend'] = 'menu-open';
+//     return redirect('notification', $data);
+// });
 Route::get('/notifications', [NotificationsController::class, 'index'])->name('notifications');
 Route::get('/notification/delete/{id}', [NotificationsController::class, 'destroy'])->name('notification-delete');
 // Zoom App Settings

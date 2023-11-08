@@ -98,6 +98,7 @@
 
   <script>
 $(function () {
+
   $('#summernote').summernote({height: 300})
   $.ajaxSetup({
     headers: {
