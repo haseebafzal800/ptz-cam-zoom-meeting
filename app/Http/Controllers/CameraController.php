@@ -13,16 +13,20 @@ class CameraController extends Controller
         $this->middleware('auth');
         $this->middleware('permission:camera-settings', ['only' => ['index','addCams']]);
     }
-    public function index(Request $request)
+    public function index(Request $request, $id='')
     {
         $data['pageTitle'] = 'Camera Control';
         $data['cameraSettings'] = 'active';
         $data['cameraSettingsOpend'] = 'menu-open';
         $data['cameraSettingsOpening'] = 'menu-is-opening';
+        $data['meeting'] = MeetingModel::where('zoom_meeting_id', $id)->first();
+        if(isset($_GET['name'])){
+            return view('admin.camera.index-multi-cam', $data);
+        }
 
-        // return view('admin.camera.index2', $data);
-        return view('admin.camera.index-multi-cam', $data);
+        return view('admin.camera.index2', $data);
     }
+
 
     public function liveStream(Request $request){
         $data = [

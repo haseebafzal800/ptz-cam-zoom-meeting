@@ -88,3 +88,6 @@
   .main-sidebar {
     overflow: hidden !important;
 }
+td{
+  min-width: 80px;
+}

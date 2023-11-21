@@ -1,6 +1,9 @@
 @extends('layouts.admin.default')
 @section('content')
 @include('includes.admin.breadcrumb')
+<link type="text/css" rel="stylesheet" href="https://source.zoom.us/2.18.0/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="https://source.zoom.us/2.18.0/css/react-select.css" />
+    
     <style>
         .content-header{
         display: none;
@@ -68,12 +71,87 @@
             color: #fff;
 
         }
+        /* #zmmtg-root{
+            width: 50% !important;
+        } */
+
+.main-sidebar .sidebar{
+    width: 100%;
+}
+.sidebar-collapse{
+    position: relative;
+}
+.wrapper{
+    position: unset;
+}
+#camera-main{
+    display: none;
+}
+#camera-main .container{
+    width: 100%;
+}
+.content-wrapper{
+    position: absolute;
+    z-index: 1;
+    background-color: transparent !important;
+}
+#zmmtg-root{
+    background-color: black;
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 50%;
+    width: 50%;
+    z-index: 0;
+}
+.showcontrol
+{
+    position: fixed;
+    z-index: 64;
+    display: block !important;
+    top: 120px;
+    left: 0;
+    height: 400px;
+    min-height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 40%;
+}
+.camera-control-button button{
+    padding: 0px;
+}
+.camera-control
+{
+    position: fixed; 
+    height: 50px; 
+    width: max-content; 
+    top: 60px; 
+    left: 50px;
+    background-color: #e9e9e9;
+    padding: 10px;
+    border-radius: 50%;
+    color: #000;
+}
+#camera-main ,
+.camera-changing-button {
+    background-color: #e9e9e957 !important;
+}
 
     </style>
+    <script>
+        function myFunction() {
+            var element = document.getElementById("camera-main");
+            element.classList.toggle("showcontrol");
+        }
+    </script>
+    <button  onclick="myFunction()" class="camera-control"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-camera" viewBox="0 0 16 16">
+  <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4z"/>
+  <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/>
+</svg></button>
     <div id="camera-main" class="wrapper">
         <div class="container">
             <div class="camera-main-contaienr py-3">
-                <div class="row main-heading-bar mb-2 py-4">
+                <div class="row main-heading-bar mb-2">
                     <div class="col-11 d-flex justify-content-end align-items-center">
                         <button class="reset-button border-0 bg-transparent d-none">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
@@ -102,7 +180,7 @@
                         <button class="camera-changing-button" title="{{$_COOKIE['cam8']??'No Camera'}}">Cam8</button>
                     </div>
                 </div>
-                <div class="row camera-controls-container py-4">
+                <div class="row camera-controls-container">
                     <div class="col-12 d-flex flex-row flex-wrap justify-content-center">
                         <div class="camera-control-button">
                             <button data-action="focusin" class="cameraFocus plus-button">
@@ -174,7 +252,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row select-items-bar py-4">
+                <div class="row select-items-bar">
                     <div class="col-12">
                         <form>
                             <?php /* <div class="row d-flex justify-content-center text-center text-dark">
@@ -205,8 +283,8 @@
                                     </div>
                                 </div>
                             </div> */ ?>
-                            <div class="row d-flex justify-content-center flex-wrap py-4">
-                                <div class="col-6 col-md-4 col-lg-2">
+                            <div class="row d-flex justify-content-center flex-wrap py-3">
+                                <div class="col-6 col-md-4 col-lg-3">
                                     <div class="form-group text-center ">
                                         <label class="text-dark" for="exampleFormControlSelect1">Pan Speed</label>
                                         <select class="form-control pan-select" id="exampleFormControlSelect1">
@@ -216,7 +294,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-4 col-lg-2">
+                                <div class="col-6 col-md-4 col-lg-3">
                                     <div class="form-group text-center ">
                                         <label class="text-dark" for="exampleFormControlSelect1">Tilt Speed</label>
                                         <select class="form-control tilt-select" id="exampleFormControlSelect1">
@@ -226,7 +304,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-4 col-lg-2">
+                                <div class="col-6 col-md-4 col-lg-3">
                                     <div class="form-group text-center ">
                                         <label class="text-dark" for="exampleFormControlSelect1">Zoom Speed</label>
                                         <select class="form-control zoom-select" id="exampleFormControlSelect1">
@@ -236,7 +314,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-4 col-lg-2">
+                                <div class="col-6 col-md-4 col-lg-3">
                                     <div class="form-group text-center ">
                                         <label class="text-dark" for="exampleFormControlSelect1">Focus Speed</label>
                                         <select class="form-control focus-select" id="exampleFormControlSelect1">
@@ -403,7 +481,7 @@
         </div>
     </div>
     <!-- model -->
-    @include('includes.admin.footer')
+    <!-- @include('includes.admin.footer') -->
   @include('includes.admin.scripts')
   <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js">
     </script>
@@ -481,6 +559,16 @@ function cameraAction(action){
     // http://[camera ip]/cgi-bin/ptzctrl.cgi?ptzcmd&[action]&[pan speed]&[tilt speed]
 }
   </script>
+
+<script src="https://source.zoom.us/2.18.0/lib/vendor/react.min.js"></script>
+<script src="https://source.zoom.us/2.18.0/lib/vendor/react-dom.min.js"></script>
+<script src="https://source.zoom.us/2.18.0/lib/vendor/redux.min.js"></script>
+<script src="https://source.zoom.us/2.18.0/lib/vendor/redux-thunk.min.js"></script>
+<script src="https://source.zoom.us/2.18.0/lib/vendor/lodash.min.js"></script>
+<script src="https://source.zoom.us/zoom-meeting-2.18.0.min.js"></script>
+<script src="{{@url('zoom/js/tool.js')}}"></script>
+<script src="{{@url('zoom/js/vconsole.min.js')}}"></script>
+<script src="{{@url('zoom/js/meeting.js')}}"></script>
   @stop
 
 
