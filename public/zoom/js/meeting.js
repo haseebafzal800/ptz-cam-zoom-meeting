@@ -2,7 +2,15 @@ window.addEventListener('DOMContentLoaded', function(event) {
   console.log('DOM fully loaded and parsed');
   websdkready();
 });
-
+document.getElementById("clear_all").addEventListener("click", function (e) {
+  testTool.deleteAllCookies();
+  document.getElementById("display_name").value = "";
+  document.getElementById("meeting_number").value = "";
+  document.getElementById("meeting_pwd").value = "";
+  document.getElementById("meeting_lang").value = "en-US";
+  document.getElementById("meeting_role").value = 0;
+  // window.location.href = "/index.html";
+});
 function websdkready() {
   var testTool = window.testTool;
   // get meeting args from url
@@ -99,6 +107,7 @@ function websdkready() {
   
     ZoomMtg.inMeetingServiceListener('onUserLeave', function (data) {
       console.log('inMeetingServiceListener onUserLeave', data);
+      $('#clear_all').click();
     });
   
     ZoomMtg.inMeetingServiceListener('onUserIsInWaitingRoom', function (data) {
