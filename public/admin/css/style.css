@@ -91,3 +91,68 @@
 td{
   min-width: 80px;
 }
+#nav-tool .container {
+  justify-content: center;
+}
+#nav-tool .container .navbar-header, #clear_all, #copy_join_link {
+  display: none;
+}
+.camera-controls-container {
+  display: none!important;
+}
+#meeting_form .sdk-select, #meeting_form .form-control {
+  width: 100%!important;
+}
+#nav-tool .websdktest {
+    flex: 0 0 100%;
+  }
+#meeting_form .sdk-select {
+  color: #495057;
+  border-radius: 0.25rem;
+  border: 1px solid #ced4da;
+  height: calc(2.25rem + 2px);
+  padding: 0.375rem 0.75rem;
+}
+#meeting_form #join_meeting {
+  min-width: 150px;
+  float: right;
+}
+.main-header {
+  z-index: 1;
+}
+button.setting-button, button.camera-control {
+  top: 6px;
+  padding: 0;
+  left: auto;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  border-radius: 0;
+  align-items: center;
+  justify-content: center;
+  background-color: none!important;
+}
+button.setting-button svg, button.camera-control svg {
+  width: 20px;
+  fill: rgba(0,0,0,.5);
+}
+button.setting-button {
+  right: 120px;
+}
+button.camera-control {
+  right: 170px;
+}
+.main-header .nav-link {
+  height: auto;
+}
+#camera-main {
+  top: 62px;
+}
+#camera-main svg {
+  width: 20px;
+}
+@media (min-width:1023.98px) {
+  #nav-tool .websdktest {
+    flex: 0 0 50%;
+  }
+}
