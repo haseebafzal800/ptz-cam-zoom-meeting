@@ -97,9 +97,7 @@ td{
 #nav-tool .container .navbar-header, #clear_all, #copy_join_link {
   display: none;
 }
-.camera-controls-container {
-  display: none!important;
-}
+
 #meeting_form .sdk-select, #meeting_form .form-control {
   width: 100%!important;
 }

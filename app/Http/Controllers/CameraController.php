@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MeetingModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 
 class CameraController extends Controller
@@ -15,12 +16,14 @@ class CameraController extends Controller
     }
     public function index(Request $request, $id='')
     {
-        $data['pageTitle'] = 'Camera Control';
+        $data['pageTitle'] = 'Meeting Info';
+        $data['zoomCreds'] = getZoomSettings(Auth::user()->client_id);
         $data['cameraSettings'] = 'active';
         $data['cameraSettingsOpend'] = 'menu-open';
         $data['cameraSettingsOpening'] = 'menu-is-opening';
         $data['meeting'] = MeetingModel::where('zoom_meeting_id', $id)->first();
         if(isset($_GET['name'])){
+            $data['pageTitle'] = 'Camera Control';
             return view('admin.camera.index-multi-cam', $data);
         }
 
@@ -68,6 +71,6 @@ class CameraController extends Controller
             setcookie('cam8', $request->cam8, time() + (30 * 24 * 60), '/');
         // }
         // var_dump($d); die;
-        return redirect(url('camera-settings'));
+        return redirect()->back();
     }
 }

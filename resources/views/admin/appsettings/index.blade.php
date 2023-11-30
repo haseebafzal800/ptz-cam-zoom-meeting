@@ -74,7 +74,47 @@
                     </div>
                     <div class="col-sm-6">
                       <div class="form-group">
-                        
+                        <label for="zoomAccountId">Zoom Client Account Id</label>
+                        <input type="text" name="zoomAccountId"  value="{{ $item->zoomAccountId }}" class="form-control" id="zoomAccountId" placeholder="Zoom Client Id">
+                        @error('zoomAccountId')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="zoomClientId">Zoom Client Id</label>
+                        <input type="text" name="zoomClientId"  value="{{ $item->zoomClientId }}" class="form-control" id="zoomClientId" placeholder="Zoom Client Id">
+                        @error('zoomClientId')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="zoomClientSecret">Zoom Client Secret</label>
+                        <input type="text" name="zoomClientSecret"  value="{{ $item->zoomClientSecret }}" class="form-control" id="zoomClientSecret" placeholder="Zoom Client Secret">
+                        @error('zoomClientSecret')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="video_sdk_client_id">Zoom video SDK Client Id</label>
+                        <input type="text" name="video_sdk_client_id"  value="{{ $item->video_sdk_client_id }}" class="form-control" id="video_sdk_client_id" placeholder="Zoom Client Id">
+                        @error('video_sdk_client_id')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="video_sdk_client_secret">Zoom video SDK Client Secret</label>
+                        <input type="text" name="video_sdk_client_secret"  value="{{ $item->video_sdk_client_secret }}" class="form-control" id="video_sdk_client_secret" placeholder="Zoom Client Secret">
+                        @error('video_sdk_client_secret')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
                       </div>
                     </div>
                   </div>
@@ -119,11 +159,22 @@
                         @enderror
                       </div>
                     </div>
-                    
-                    
                     <div class="col-sm-6">
                       <div class="form-group">
-                        
+                        <label for="video_sdk_client_id">Zoom video SDK Client Id</label>
+                        <input type="text" name="video_sdk_client_id"  value="{{ $item->video_sdk_client_id }}" class="form-control" id="video_sdk_client_id" placeholder="Zoom Client Id">
+                        @error('video_sdk_client_id')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="video_sdk_client_secret">Zoom video SDK Client Secret</label>
+                        <input type="text" name="video_sdk_client_secret"  value="{{ $item->video_sdk_client_secret }}" class="form-control" id="video_sdk_client_secret" placeholder="Zoom Client Secret">
+                        @error('video_sdk_client_secret')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
                       </div>
                     </div>
                   </div>

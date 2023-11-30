@@ -102,6 +102,7 @@ function websdkready() {
     });
 
     ZoomMtg.inMeetingServiceListener('onUserJoin', function (data) {
+      $('.camera-controls-container').removeClass('hide1');
       console.log('inMeetingServiceListener onUserJoin', data);
     });
   
